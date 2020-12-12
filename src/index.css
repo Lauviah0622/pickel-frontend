@@ -1,3 +1,7 @@
+:root {
+  --drawer-width: calc(180px + 10vw);
+}
+
 body {
   margin: 0;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
@@ -31,4 +35,9 @@ h6 {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+.MuiMenu-paper {
+  /* Limit popup height, 真的非不得已，不然 index.css 會被加在最上面 */
+  max-height: 16.8em !important;
 }

@@ -67,7 +67,7 @@ export default function Entry() {
           onChange={handleInputSChange}
         />
         <Button color="primary" variant="contained" component="div" size="large">
-          接著選擇 {eventName} 的活動時間
+          {eventName.length ? `然後點我輸入 ${eventName} 的活動資訊` : '先上在上面輸入名稱'}
         </Button>
       </StyledForm>
     </Root>
