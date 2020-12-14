@@ -1,14 +1,16 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 
 import MuiDrawer from "@material-ui/core/Drawer";
 import MuiList from "@material-ui/core/List";
+import Tabs from "@material-ui/core/Tabs";
+import Tab from "@material-ui/core/Tab";
 
 import Divider from "@material-ui/core/Divider";
 import { makeStyles } from "@material-ui/core/styles";
 
 const drawerWidth = "var(--drawer-width)";
-const SideBar = styled(MuiDrawer)`
+const SideBarContainer = styled(MuiDrawer)`
   width: ${drawerWidth};
   flex-shrink: 0;
   .MuiPaper-root {
@@ -25,25 +27,55 @@ const SidebarList = styled(MuiList)`
 
 const SidebarBottom = styled.div`
   padding: 16px 16px; /* refer to Mui */
+  display: flex;
+  /* flex-wrap: nowrap; */
+  & button + button {
+    margin-left: 8px;
+  }
+`;
+
+const StyledTab = styled(Tab)`
+  &.MuiTab-root {
+    flex-grow: 1;
+    min-width: auto;
+  }
 `;
 
 const useToobarStyle = makeStyles((theme) => ({
   toolbar: theme.mixins.toolbar,
 }));
-// const useToobarStyle = makeStyles((theme) => ({toolbar: theme.mixins.toolbar}));
 
 export default function Sidebar({ children, SidebarBottomItems }) {
+  const [value, setValue] = useState(0);
+  const handleChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
   const { toolbar: toolbarClass } = useToobarStyle();
   return (
-    <SideBar variant="permanent" anchor="left">
+    <SideBarContainer variant="permanent" anchor="left">
       <div className={toolbarClass} />
+      <Tabs
+        value={value}
+        onChange={handleChange}
+        aria-label="simple tabs example"
+      >
+        {Object.keys(children).map((PannelTag, index, keys) => (
+          <StyledTab
+            label={PannelTag}
+            id={index}
+            disableRipple={keys.length === 1}
+          />
+        ))}
+      </Tabs>
       <Divider />
-      <SidebarList>
-        {children}
-      </SidebarList>
-      <SidebarBottom>
-        {SidebarBottomItems && <SidebarBottomItems />}
-      </SidebarBottom>
-    </SideBar>
+      {Object.values(children).map((PannelContent, index) => (
+        <SidebarList value={value} index={index} hidden={value !== index}>
+          {PannelContent}
+        </SidebarList>
+      ))}
+
+      <SidebarBottom>{SidebarBottomItems}</SidebarBottom>
+    </SideBarContainer>
   );
 }

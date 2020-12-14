@@ -27,7 +27,7 @@ const theme = {
     },
     error: {
       light: "#e57373",
-      main: "#f44336",
+      main: "#e64539",
       dark: "#d32f2f",
       contrastText: "#fff",
     },
