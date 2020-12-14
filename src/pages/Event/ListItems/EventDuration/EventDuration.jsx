@@ -5,7 +5,8 @@ import MuiFormControlLabel from "@material-ui/core/FormControlLabel";
 import Checkbox from "@material-ui/core/Checkbox";
 
 import ListItem from "../../../../components/List/ListItem.jsx";
-import SelectField from "./SelectField.jsx";
+// import SelectField from "./SelectField.jsx";
+import SelectField from "../../../../components/List/SelectField.jsx";
 
 const alldayOptions = Array(7)
   .fill(0)

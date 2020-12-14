@@ -7,6 +7,7 @@ import Sidebar from "../../components/Sidebar";
 import EventName from "./ListItems/EventName";
 import EventDuration from "./ListItems/EventDuration";
 import EventPickRange from "./ListItems/EventPickRange";
+import EventInfo from "./ListItems/EventInfo";
 
 const EventContainer = styled.div``;
 
@@ -36,7 +37,8 @@ export default function Event() {
         toggleIsAllday={toggleIsAllday}
         setDuration={setDuration}
         />
-        <EventPickRange></EventPickRange>
+        <EventPickRange/>
+        <EventInfo/>
       </Sidebar>
     </EventContainer>
   );
