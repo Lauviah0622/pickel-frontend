@@ -15,22 +15,26 @@ const Root = styled.div`
 
 const Title = styled.h1`
   color: ${(props) => props.theme.palette.primary.dark};
-  font-size: 7rem;
+  font-size: 6rem;
   font-weight: 500;
 `;
 
 const Subtitle = styled.h2`
   color: ${(props) => props.theme.palette.text.secondary};
-  font-size: 2rem;
+  font-size: 1.7rem;
   font-weight: 300;
 `;
 
 const Input = styled(MuiInput)`
   margin: 40px 0;
   .MuiInput-input {
-    font-size: 7rem;
+    font-size: 5rem;
     text-align: center;
     font-weight: 300;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow:hidden;
+    width: 100%;
     color: ${(props) => props.theme.palette.text.secondary};
   }
 `;
@@ -44,8 +48,10 @@ const StyledForm = styled.form`
 
 const Button = styled(MuiButton)`
     margin-top: 2rem;
-    font-size: 1.3em;
-    font-weight: 300;
+    .MuiButton-label {
+      font-size: 1.2em;
+      font-weight: 300;
+    }
 `;
 
 export default function Entry() {
@@ -53,7 +59,6 @@ export default function Entry() {
     const handleInputSChange = (e) => {
         setEventName(e.target.value);
     }
-    
     
   return (
     <Root>

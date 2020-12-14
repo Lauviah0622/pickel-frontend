@@ -16,7 +16,7 @@ body {
 html {
   height: 100vh;
   width: 100vw;
-  font-size: 12px;
+  font-size: 14px;
 }
 
 h1,
@@ -36,6 +36,10 @@ h6 {
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
+}
+
+input {
+  font-weight: 300;
 }
 
 .MuiMenu-paper {
