@@ -8,6 +8,7 @@ import EventName from "./ListItems/EventName";
 import EventDuration from "./ListItems/EventDuration";
 import EventPickRange from "./ListItems/EventPickRange";
 import EventInfo from "./ListItems/EventInfo";
+import EventSetting from "./ListItems/EventSetting";
 
 const EventContainer = styled.div``;
 
@@ -39,6 +40,7 @@ export default function Event() {
         />
         <EventPickRange/>
         <EventInfo/>
+        <EventSetting/>
       </Sidebar>
     </EventContainer>
   );

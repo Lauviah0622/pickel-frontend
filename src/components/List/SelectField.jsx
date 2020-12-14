@@ -7,9 +7,10 @@ import MuiMenuItem from "@material-ui/core/MenuItem";
 const TextField = styled(MuiTextField)`
   &.MuiTextField-root {
     width: 18ch;
+    margin-right: 7px;
   }
   .MuiSelect-select {
-    padding-left: 12px;
+    padding-left: 6px;
   }
 `;
 

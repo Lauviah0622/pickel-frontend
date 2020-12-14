@@ -17,7 +17,7 @@ const Multiline = styled(TextField)`
   width: 100%;
 `;
 
-export default function EventName() {
+export default function EventInfo() {
   return (
     <ListItem text="活動資訊">
       <ItemContentBlock>
