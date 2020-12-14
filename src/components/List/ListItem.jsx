@@ -7,7 +7,7 @@ import MuiListItemText from "@material-ui/core/ListItemText";
 
 const ListItemText = styled(MuiListItemText)`
   .MuiListItemText-primary {
-    font-size: 0.5em;
+    font-size: 0.5rem;
   }
   /* display: block; */
 `;

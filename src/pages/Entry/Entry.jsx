@@ -15,21 +15,22 @@ const Root = styled.div`
 
 const Title = styled.h1`
   color: ${(props) => props.theme.palette.primary.dark};
-  font-size: 4em;
+  font-size: 7rem;
   font-weight: 500;
 `;
 
 const Subtitle = styled.h2`
   color: ${(props) => props.theme.palette.text.secondary};
-  font-size: 1.5em;
+  font-size: 2rem;
   font-weight: 300;
 `;
 
 const Input = styled(MuiInput)`
   margin: 40px 0;
   .MuiInput-input {
-    font-size: 5em;
+    font-size: 7rem;
     text-align: center;
+    font-weight: 300;
     color: ${(props) => props.theme.palette.text.secondary};
   }
 `;
@@ -42,7 +43,9 @@ const StyledForm = styled.form`
 `;
 
 const Button = styled(MuiButton)`
-    font-size: 1.2em;
+    margin-top: 2rem;
+    font-size: 1.3em;
+    font-weight: 300;
 `;
 
 export default function Entry() {
@@ -67,6 +70,7 @@ export default function Entry() {
           onChange={handleInputSChange}
         />
         <Button color="primary" variant="contained" component="div" size="large">
+        
           {eventName.length ? `然後點我輸入 ${eventName} 的活動資訊` : '先上在上面輸入名稱'}
         </Button>
       </StyledForm>
