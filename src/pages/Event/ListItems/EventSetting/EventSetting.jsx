@@ -1,26 +1,18 @@
 import React from "react";
-import styled from "styled-components";
 
-import MuiInput from "@material-ui/core/Input";
 import ListItem from '../../../../components/List/ListItem.jsx';
+import ListCheckbox from "../../../../components/List/ListCheckbox.jsx";
 
 
-
-const EventNameInput = styled(MuiInput)`
-.MuiInput-input {
-  font-size: 2em;
-  font-weight: 700;
-}
-`;
-
-export default function EventSetting({value}) {
+export default function EventSetting() {
   return (
     <ListItem text="投票設定">
-      <EventNameInput
-        value={value}
-        fullWidth
-        disableUnderline
-      ></EventNameInput>
+         <ListCheckbox
+          label="匿名投票"
+          checked={true}
+          onChange={() => {}}
+          name="checkedA"
+        />
     </ListItem>
   );
 }
