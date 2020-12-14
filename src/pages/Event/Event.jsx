@@ -6,6 +6,7 @@ import Button from "@material-ui/core/Button";
 import Sidebar from "../../components/Sidebar";
 import EventName from "./ListItems/EventName";
 import EventDuration from "./ListItems/EventDuration";
+import EventPickRange from "./ListItems/EventPickRange";
 
 const EventContainer = styled.div``;
 
@@ -35,6 +36,7 @@ export default function Event() {
         toggleIsAllday={toggleIsAllday}
         setDuration={setDuration}
         />
+        <EventPickRange></EventPickRange>
       </Sidebar>
     </EventContainer>
   );
