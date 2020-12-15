@@ -1,12 +1,17 @@
+import React from "react";
+
 import styled from "styled-components";
 
 import MuiButton from "@material-ui/core/Button";
 
-const Button = styled(MuiButton)`
+// avoid passing props to component
+const Button = styled(({alertTheme, mainTheme, ...props}) => {
+  return (<MuiButton {...props}/>)
+})`
 flex-grow: 0;
 flex-shrink: 0;
 ${(props) =>
-  props.alert &&
+  props.alertTheme &&
   `
     background-color: ${props.theme.palette.error.main};
     color: ${props.theme.palette.error.contrastText};
@@ -15,7 +20,7 @@ ${(props) =>
     }
 `}
 ${(props) =>
-  props.main &&
+  props.mainTheme &&
   `
     flex-grow: 1;
     flex-shrink: 1;

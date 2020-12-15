@@ -49,7 +49,7 @@ export default function EventDuration({
         <SelectField
           options={isAllday ? alldayOptions : partOptions}
           value={duration}
-          handleChange={selectOnchange}
+          onChange={selectOnchange}
         />
         <ListCheckbox
           label="全天活動"

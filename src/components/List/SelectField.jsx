@@ -1,15 +1,16 @@
 import React from "react";
 import styled from "styled-components";
 
-import MuiTextField from "@material-ui/core/TextField";
+import MuiSelect from '@material-ui/core/Select';
 import MuiMenuItem from "@material-ui/core/MenuItem";
 
-const TextField = styled(MuiTextField)`
-  &.MuiTextField-root {
-    width: 18ch;
+
+const Select = styled(MuiSelect)`
+  &.MuiInput-root {
     margin-right: 7px;
   }
   .MuiSelect-select {
+    width: 18ch;
     padding-left: 6px;
   }
 `;
@@ -29,16 +30,16 @@ const MenuItem = styled(MuiMenuItem)`
  * @param {*} value 
  * @param {*} handleChange 
  */
-export default function SelectField({options, value, handleChange}) {
+export default function SelectField({options, ...selectProps}) {
   return (
     <>
-      <TextField select value={value} onChange={handleChange}>
-        {options && options.map((option) => (
-          <MenuItem key={option.value} value={option.value}>
+      <Select {...selectProps}>
+        {options && options.map((option, i) => (
+          <MenuItem key={i} value={option.value}>
             {option.label}
           </MenuItem>
         ))}
-      </TextField>
+      </Select>
     </>
   );
 }

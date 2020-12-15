@@ -14,10 +14,10 @@ const EventContainer = styled.div``;
 
 const SidebarBottomItems = (
   <>
-    <ListBottomButton variant="contained" alert>
+    <ListBottomButton variant="contained" alertTheme={true}>
       Primary
     </ListBottomButton>
-    <ListBottomButton variant="contained" color="primary" main>
+    <ListBottomButton variant="contained" color="primary" mainTheme={true}>
       Primary
     </ListBottomButton>
   </>

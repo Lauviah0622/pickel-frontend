@@ -5,12 +5,6 @@ import ListItem from "../../../../components/List/ListItem.jsx";
 import DateTimePicker from "../../../../components/List/DateTimePicker.jsx";
 
 
-
-// MuiTextField-root
-// .MuiInputBase-input
-
-
-
 const ItemText = styled.p`
     margin: 3px 0;
     margin-top: 8px;
@@ -18,10 +12,10 @@ const ItemText = styled.p`
 `;
 
 
-export default function EventName() {
+export default function PickTimeFilter() {
   return (
-    <ListItem text="活動舉辦區間">
-    <DateTimePicker/>
+    <ListItem text="時間範圍">
+      <DateTimePicker/>
       <ItemText>至</ItemText>
       <DateTimePicker/>
     </ListItem>

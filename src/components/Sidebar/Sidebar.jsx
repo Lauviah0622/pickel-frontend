@@ -59,7 +59,7 @@ export default function Sidebar({ children, SidebarBottomItems }) {
       <Tabs
         value={value}
         onChange={handleChange}
-        indicatorColor='primary'
+        indicatorColor="primary"
         variant="fullWidth"
       >
         {Object.keys(children).map((PannelTag, index, keys) => (
@@ -67,12 +67,19 @@ export default function Sidebar({ children, SidebarBottomItems }) {
             label={PannelTag}
             id={index}
             disableRipple={keys.length === 1}
+            style={{cursor: keys.length === 1 && "unset"}}
+            key={`tab-${index}`}
           />
         ))}
       </Tabs>
       <Divider />
       {Object.values(children).map((PannelContent, index) => (
-        <SidebarList value={value} index={index} hidden={value !== index}>
+        <SidebarList
+          value={value}
+          index={index}
+          hidden={value !== index}
+          key={`SidebarList-${index}`}
+        >
           {PannelContent}
         </SidebarList>
       ))}
