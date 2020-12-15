@@ -35,10 +35,10 @@ const SidebarBottom = styled.div`
 `;
 
 const StyledTab = styled(Tab)`
-  &.MuiTab-root {
+  /* &.MuiTab-root {
     flex-grow: 1;
     min-width: auto;
-  }
+  } */
 `;
 
 const useToobarStyle = makeStyles((theme) => ({
@@ -55,10 +55,12 @@ export default function Sidebar({ children, SidebarBottomItems }) {
   return (
     <SideBarContainer variant="permanent" anchor="left">
       <div className={toolbarClass} />
+      <Divider />
       <Tabs
         value={value}
         onChange={handleChange}
-        aria-label="simple tabs example"
+        indicatorColor='primary'
+        variant="fullWidth"
       >
         {Object.keys(children).map((PannelTag, index, keys) => (
           <StyledTab
