@@ -11,6 +11,7 @@ body {
   -moz-osx-font-smoothing: grayscale;
   height: 100%;
   width: 100%;
+  scrollbar-width: none;
 }
 
 html {
@@ -45,4 +46,9 @@ input {
 .MuiMenu-paper {
   /* Limit popup height, 真的非不得已，不然 index.css 會被加在最上面 */
   max-height: 16.8em !important;
+}
+
+/* 這裡要怎麼處理比較好？弄掉 scroll bar */
+::-webkit-scrollbar {
+  display: none;
 }

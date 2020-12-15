@@ -13,6 +13,7 @@ const drawerWidth = "var(--drawer-width)";
 const SideBarContainer = styled(MuiDrawer)`
   width: ${drawerWidth};
   flex-shrink: 0;
+
   .MuiPaper-root {
     padding-bottom: 16px;
     width: ${drawerWidth};
@@ -35,10 +36,9 @@ const SidebarBottom = styled.div`
 `;
 
 const StyledTab = styled(Tab)`
-  /* &.MuiTab-root {
-    flex-grow: 1;
+  &.MuiTab-root {
     min-width: auto;
-  } */
+  }
 `;
 
 const useToobarStyle = makeStyles((theme) => ({
@@ -67,7 +67,7 @@ export default function Sidebar({ children, SidebarBottomItems }) {
             label={PannelTag}
             id={index}
             disableRipple={keys.length === 1}
-            style={{cursor: keys.length === 1 && "unset"}}
+            style={{ cursor: keys.length === 1 && "unset" }}
             key={`tab-${index}`}
           />
         ))}
