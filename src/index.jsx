@@ -5,9 +5,14 @@ import {
   ThemeProvider as MaterialThemeProvider,
 } from "@material-ui/core/styles";
 import { ThemeProvider } from "styled-components";
+import dayjs from 'dayjs';
+
 import './index.css';
 
 import App from "./App.jsx";
+
+
+dayjs.locale('zh-tw');
 
 const theme = {
   palette: {
