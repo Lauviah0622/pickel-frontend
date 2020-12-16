@@ -35,7 +35,7 @@ const Accordion = styled(MuiAccordion)`
   }
 
   .MuiIconButton-root {
-    padding: 9px;
+    padding: 6px;
   }
   .MuiAccordionSummary-content {
     margin: 8px 0;
@@ -45,11 +45,15 @@ const Accordion = styled(MuiAccordion)`
     margin: 8px 0;
   }
 
+  .MuiAccordionDetails-root {
+    padding: 4px 8px 8px;
+  }
+
   .period__container {
     flex-direction: column;
     cursor: unset;
     > div + div {
-      margin-top: 8px;
+      margin-top: 12px;
     }
   }
 `;
@@ -57,11 +61,15 @@ const Accordion = styled(MuiAccordion)`
 const PickerName = styled.h4`
   font-size: 0.8em;
   color: ${(props) => props.theme.palette.text.primary};
-  font-weight: 700;
+  font-weight: 500;
 `;
 
 const AccordionContainer = styled.div`
   margin-top: 8px;
+  flex-grow: 1;
+
+  display: flex;
+  flex-direction: column;
 `;
 
 /* eslint-disable-next-line */
@@ -74,13 +82,85 @@ const testData = [
         description: "nonon",
         start: "2020-12-20T15:45:00.000Z",
         duration: 6,
-        priority: 3,
+        priority: 2,
       },
       {
         description: "non",
         start: "2020-12-20T05:15:00.000Z",
         duration: 6,
+        priority: 1,
+      },
+      {
+        description: "non",
+        start: "2020-12-20T23:45:00.000Z",
+        duration: 6,
         priority: 3,
+      },
+      {
+        description: "nonon",
+        start: "2020-12-20T15:45:00.000Z",
+        duration: 6,
+        priority: 2,
+      },
+      {
+        description: "non",
+        start: "2020-12-20T05:15:00.000Z",
+        duration: 6,
+        priority: 1,
+      },
+      {
+        description: "non",
+        start: "2020-12-20T23:45:00.000Z",
+        duration: 6,
+        priority: 3,
+      },
+      {
+        description: "nonon",
+        start: "2020-12-20T15:45:00.000Z",
+        duration: 6,
+        priority: 2,
+      },
+      {
+        description: "non",
+        start: "2020-12-20T05:15:00.000Z",
+        duration: 6,
+        priority: 1,
+      },
+      {
+        description: "non",
+        start: "2020-12-20T23:45:00.000Z",
+        duration: 6,
+        priority: 3,
+      },
+      {
+        description: "nonon",
+        start: "2020-12-20T15:45:00.000Z",
+        duration: 6,
+        priority: 2,
+      },
+      {
+        description: "non",
+        start: "2020-12-20T05:15:00.000Z",
+        duration: 6,
+        priority: 1,
+      },
+      {
+        description: "non",
+        start: "2020-12-20T23:45:00.000Z",
+        duration: 6,
+        priority: 3,
+      },
+      {
+        description: "nonon",
+        start: "2020-12-20T15:45:00.000Z",
+        duration: 6,
+        priority: 2,
+      },
+      {
+        description: "non",
+        start: "2020-12-20T05:15:00.000Z",
+        duration: 6,
+        priority: 1,
       },
       {
         description: "non",
@@ -114,6 +194,54 @@ const testData = [
       },
     ],
   },
+  {
+    id: 5,
+    name: "Med",
+    periods: [
+      {
+        description: "nonon",
+        start: "2020-12-20T15:45:00.000Z",
+        duration: 6,
+        priority: 2,
+      },
+      {
+        description: "non",
+        start: "2020-12-20T05:15:00.000Z",
+        duration: 6,
+        priority: 1,
+      },
+      {
+        description: "non",
+        start: "2020-12-20T23:45:00.000Z",
+        duration: 6,
+        priority: 3,
+      },
+    ],
+  },
+  {
+    id: 6,
+    name: "Bred",
+    periods: [
+      {
+        description: "nonon",
+        start: "2020-12-20T15:45:00.000Z",
+        duration: 6,
+        priority: 2,
+      },
+      {
+        description: "non",
+        start: "2020-12-20T05:15:00.000Z",
+        duration: 6,
+        priority: 1,
+      },
+      {
+        description: "non",
+        start: "2020-12-20T23:45:00.000Z",
+        duration: 6,
+        priority: 3,
+      },
+    ],
+  },
 ];
 
 const Picks = testData.map((pick) => (
@@ -122,19 +250,40 @@ const Picks = testData.map((pick) => (
       <PickerName>{pick.name}</PickerName>
     </AccordionSummary>
     <AccordionDetails className="period__container">
-      {pick.periods.map((period) => (<Period
-        start={period.start}
-        duration={period.duration}
-        type={"part"}
-      />))}
+      {pick.periods.map((period) => (
+        <Period
+          start={period.start}
+          duration={period.duration}
+          type={"part"}
+          priority={period.priority}
+        />
+      ))}
     </AccordionDetails>
   </Accordion>
 ));
 
+const PeriodListItem = styled(ListItem)`
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  &.MuiListItem-root {
+    > div + div {
+      flex-grow: 1;
+      min-height: 0;
+      overflow: auto;
+      margin-top: 8px;
+    }
+  }
+  /* 
+  .picks__contianer {
+  } */
+`;
+
 export default function PickOverview() {
   return (
-    <ListItem text="可參與者">
+
+    <PeriodListItem text="可參與者">
       <AccordionContainer>{Picks}</AccordionContainer>
-    </ListItem>
+    </PeriodListItem>
   );
 }

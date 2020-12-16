@@ -7,28 +7,46 @@ import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 
 import Divider from "@material-ui/core/Divider";
-import { makeStyles } from "@material-ui/core/styles";
 
 const drawerWidth = "var(--drawer-width)";
 const SideBarContainer = styled(MuiDrawer)`
   width: ${drawerWidth};
   flex-shrink: 0;
-
-  .MuiPaper-root {
-    padding-bottom: 16px;
+  > .MuiPaper-root {
+    box-sizing: border-box;
+    padding-top: 64px;
+    /* padding-bottom: px; */
     width: ${drawerWidth};
     display: flex;
     flex-direction: column;
+    height: 100%;
   }
+
+  .tabContainer {
+    flex-grow: 1;
+    /* overflow-y: hidden; */
+  }
+
+  .tabs {
+    flex-shrink:0;
+  }
+
+
 `;
 
 const SidebarList = styled(MuiList)`
-  flex-grow: 4;
+  /* flex-grow: 4; */
+  flex-grow: 1;
+    overflow: scroll;
 `;
 
 const SidebarBottom = styled.div`
   padding: 16px 16px; /* refer to Mui */
   display: flex;
+  box-sizing: border-box;
+  background-color: white;
+  flex-shrink:0;
+
   /* flex-wrap: nowrap; */
   & button + button {
     margin-left: 8px;
@@ -41,26 +59,21 @@ const StyledTab = styled(Tab)`
   }
 `;
 
-const useToobarStyle = makeStyles((theme) => ({
-  toolbar: theme.mixins.toolbar,
-}));
-
 export default function Sidebar({ children, SidebarBottomItems }) {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
   };
 
-  const { toolbar: toolbarClass } = useToobarStyle();
   return (
     <SideBarContainer variant="permanent" anchor="left">
-      <div className={toolbarClass} />
       <Divider />
       <Tabs
         value={value}
         onChange={handleChange}
         indicatorColor="primary"
         variant="fullWidth"
+        className="tabs"
       >
         {Object.keys(children).map((PannelTag, index, keys) => (
           <StyledTab
@@ -83,7 +96,6 @@ export default function Sidebar({ children, SidebarBottomItems }) {
           {PannelContent}
         </SidebarList>
       ))}
-
       <SidebarBottom>{SidebarBottomItems}</SidebarBottom>
     </SideBarContainer>
   );

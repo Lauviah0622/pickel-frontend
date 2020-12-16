@@ -1,5 +1,8 @@
 :root {
   --drawer-width: calc(180px + 10vw);
+  --color-priority-low: #ff535342;
+  --color-priority-medium: #ffe17c4a;
+  --color-priority-high: #8bc34a4a;
 }
 
 body {

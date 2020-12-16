@@ -4,20 +4,31 @@ import dayjs from "dayjs";
 import "dayjs/locale/zh-tw";
 
 const PeriodContainer = styled.div`
-width: 100%;
+  width: 100%;
+  /* border: 1px solid black; */
+  padding: 4px;
+  border-radius: 4px;
+  background-color: var(${props => [
+    '--color-priority-low',
+    '--color-priority-medium',
+    '--color-priority-high',
+  ][props.priority - 1]});
 
-.datetime__container {
-  display: flex;
-  justify-content: space-between;
-  width: inherit;
-}
-.datetime__time {
-  width: 10ch;
-}
+  .datetime__container {
+    display: flex;
+    justify-content: space-between;
+    width: inherit;
+
+    & + .datetime__container {
+      margin-top: 4px;
+    }
+  }
+  .datetime__time {
+    width: 10ch;
+  }
 `;
 
-
-export default function Period({ start, duration, type }) {
+export default function Period({ start, duration, type, priority }) {
   const periodStart = dayjs(start);
   const periodEnd =
     type === "part"
@@ -57,5 +68,5 @@ export default function Period({ start, duration, type }) {
       </>
     );
   }
-  return <PeriodContainer>{period}</PeriodContainer>;
+  return <PeriodContainer priority={priority}>{period}</PeriodContainer>;
 }

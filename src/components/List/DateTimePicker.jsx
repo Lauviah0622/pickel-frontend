@@ -14,7 +14,9 @@ import {
 } from "@material-ui/pickers";
 
 const DatePicker = styled(KeyboardDatePicker)`
-  margin-right: 5px;
+  &.MuiFormControl-root {
+    margin-right: 5px;
+  }
   .MuiInputBase-input {
     width: 10ch;
   }
