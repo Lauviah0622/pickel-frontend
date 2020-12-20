@@ -1,7 +1,14 @@
-import React, {useState} from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import MuiInput from "@material-ui/core/Input";
 import MuiButton from "@material-ui/core/Button";
+
+import { useHistory } from "react-router-dom";
+import { useDispatch, useSelector } from 'react-redux';
+import { setEventData } from '../../redux/features/event/eventSlice';
+import { setStatusData } from '../../redux/features/status/statusSlice';
+import { getEventLocalStorage } from '../../utils';
+
 
 const Root = styled.div`
   background-color: #d6e2c9;
@@ -33,7 +40,7 @@ const Input = styled(MuiInput)`
     font-weight: 300;
     white-space: nowrap;
     text-overflow: ellipsis;
-    overflow:hidden;
+    overflow: hidden;
     width: 100%;
     color: ${(props) => props.theme.palette.text.secondary};
   }
@@ -47,19 +54,46 @@ const StyledForm = styled.form`
 `;
 
 const Button = styled(MuiButton)`
-    margin-top: 2rem;
-    .MuiButton-label {
-      font-size: 1.2em;
-      font-weight: 300;
-    }
+  margin-top: 2rem;
+  .MuiButton-label {
+    font-size: 1.2em;
+    font-weight: 300;
+  }
 `;
 
 export default function Entry() {
-    const [eventName, setEventName] = useState('');
-    const handleInputSChange = (e) => {
-        setEventName(e.target.value);
+  const [eventName, setEventName] = useState("");
+  const history = useHistory();
+  const dispatch = useDispatch();
+  const handleInputSChange = (e) => {
+    setEventName(e.target.value);
+  };
+
+  const handleButtonClick = () => {
+    dispatch(setStatusData('client'))
+    dispatch(setEventData({name: eventName}))
+    history.push('/event');
+  };
+
+  const eventState = useSelector((store) => store.eventState);
+  const statusState = useSelector((store) => store.statusState);
+  
+  console.log(eventState)
+  console.log(statusState)
+
+  useEffect(() => {
+    if (statusState === 'picker') {
+      history.push('/pick')
+    } else if (statusState === 'launcher') {
+      history.push('/event')
     }
-    
+    const localUnsaveEvent = getEventLocalStorage();
+    if (!localUnsaveEvent) return 
+
+    // 表示已經有 unsafe Event 了，但是想反回到 entry page
+    history.push('/event')
+  }, []);
+
   return (
     <Root>
       <Title>Pickel</Title>
@@ -74,9 +108,17 @@ export default function Entry() {
           value={eventName}
           onChange={handleInputSChange}
         />
-        <Button color="primary" variant="contained" component="div" size="large">
-        
-          {eventName.length ? `然後點我輸入 ${eventName} 的活動資訊` : '先上在上面輸入名稱'}
+        <Button
+          color="primary"
+          variant="contained"
+          disabled={eventName.length === 0}
+          component="div"
+          size="large"
+          onClick={handleButtonClick}
+        >
+          {eventName.length
+            ? `然後點我輸入 ${eventName} 的活動資訊`
+            : "先上在上面輸入名稱"}
         </Button>
       </StyledForm>
     </Root>

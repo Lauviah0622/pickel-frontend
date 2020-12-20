@@ -5,14 +5,18 @@ import {
   ThemeProvider as MaterialThemeProvider,
 } from "@material-ui/core/styles";
 import { ThemeProvider } from "styled-components";
-import dayjs from 'dayjs';
+import { Provider } from "react-redux";
+import { configureStore } from '@reduxjs/toolkit';
+import dayjs from "dayjs";
+import rootReducer from "./redux/reducers";
 
-import './index.css';
+import "./index.css";
 
 import App from "./App.jsx";
 
+const store = configureStore({reducer: rootReducer});
 
-dayjs.locale('zh-tw');
+dayjs.locale("zh-tw");
 
 const theme = {
   palette: {
@@ -48,11 +52,13 @@ const theme = {
 const muiTheme = createMuiTheme(theme);
 
 ReactDOM.render(
-  <ThemeProvider theme={theme}>
-    <MaterialThemeProvider theme={muiTheme}>
-      <App />
-    </MaterialThemeProvider>
-  </ThemeProvider>,
+  <Provider store={store}>
+    <ThemeProvider theme={theme}>
+      <MaterialThemeProvider theme={muiTheme}>
+        <App />
+      </MaterialThemeProvider>
+    </ThemeProvider>
+  </Provider>,
   document.getElementById("root")
 );
 
@@ -60,9 +66,8 @@ ReactDOM.render(
 // to log results (for example: reportWebVitals(console.log))
 // or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
 
-
 // Hot Module Replacement (HMR) - Remove this snippet to remove HMR.
- // Learn more: https://www.snowpack.dev/concepts/hot-module-replacement
- if (import.meta.hot) {
+// Learn more: https://www.snowpack.dev/concepts/hot-module-replacement
+if (import.meta.hot) {
   import.meta.hot.accept();
 }

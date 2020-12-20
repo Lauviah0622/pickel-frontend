@@ -35,27 +35,23 @@ const partOptions = (() => {
 
 export default function EventDuration({
   duration,
+  durationOnChange,
   isAllday,
-  toggleIsAllday,
-  setDuration,
+  alldayOnChange,
 }) {
-  const selectOnchange = (e) => {
-    setDuration(e.target.value);
-  };
-
+  console.log(duration)
   return (
     <ListItem text="活動時長">
       <div>
         <SelectField
           options={isAllday ? alldayOptions : partOptions}
           value={duration}
-          onChange={selectOnchange}
+          onChange={durationOnChange}
         />
         <ListCheckbox
           label="全天活動"
           checked={isAllday}
-          onChange={toggleIsAllday}
-          name="checkedA"
+          onChange={alldayOnChange}
         />
       </div>
       <div></div>
