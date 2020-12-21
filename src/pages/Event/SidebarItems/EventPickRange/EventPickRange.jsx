@@ -15,11 +15,8 @@ const ItemText = styled.p`
 `;
 
 export default function EventpickRange({ start, end, onStartChange, onEndChange }) {
-
-  console.log('EventpickRange', start);
-  console.log('EventpickRange', end);
   return (
-    <ListItem text="活動舉辦區間">
+    <ListItem text="活動投票時間">
       <MuiPickersUtilsProvider utils={DateFnsUtils}>
         <MuiKeyboardDateTimePicker
           ampm={false}
