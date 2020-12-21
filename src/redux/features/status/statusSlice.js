@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const statusSlice = createSlice({
-  name: "useState",
+  name: "statusState",
   initialState: {
     status: 'client', // client, launcher, picker
   },

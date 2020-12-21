@@ -39,7 +39,6 @@ export default function EventDuration({
   isAllday,
   alldayOnChange,
 }) {
-  console.log(duration)
   return (
     <ListItem text="活動時長">
       <div>

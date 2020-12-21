@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
@@ -10,48 +10,62 @@ import EventDuration from "./SidebarItems/EventDuration";
 import EventPickRange from "./SidebarItems/EventPickRange";
 import EventInfo from "./SidebarItems/EventInfo";
 import EventSetting from "./SidebarItems/EventSetting";
-
-import { setEventData } from "../../redux/features/event/eventSlice";
+import Range from "./SidebarItems/Range";
+import AddRange from "./SidebarItems/AddRange";
+import ListItem from "../../components/List/ListItem.jsx";
+import {
+  setEventData,
+  addNoRepeatRange,
+} from "../../redux/features/event/eventSlice";
 import { getEventLocalStorage, setEventLocalStorage } from "../../utils";
+import { createEventReq } from '../../redux/features/fetchSlice/fetchSlice';
+
 
 const EventContainer = styled.div``;
 
 export default function Event() {
   const dispatch = useDispatch();
   const history = useHistory();
-
   const event = useSelector((store) => store.eventState);
+  const [addRangeError, setAddRangeError] = useState(false);
+
+  console.log("event", event);
+
+  // TODO: 這邊重新整理的流程(localstorage 根 redux 要什麼時候同步)要在想一下
+
+  // TODO: allday 還有 part 要有不同的選擇器（之後再做）
 
   useEffect(() => {
+    console.log('useEffect')
     const localUnsaveEvent = getEventLocalStorage();
+    console.log('localUnsaveEvent in useEffect', localUnsaveEvent)
     if (!localUnsaveEvent) {
+      console.log('no local event')
       if (event.name.length !== 0) {
         setEventLocalStorage(event);
+        console.log('event.name.length == 0')
       } else {
         history.push("/");
+        console.log('event.name.length !== 0')
       }
       return;
     }
     dispatch(setEventData(localUnsaveEvent));
   }, []);
 
-  console.log("event", event);
-
   useEffect(() => {
+    console.log('useEffect, event Change');
     setEventLocalStorage(event);
   }, [event]);
 
-  // {name: e.target.value}
-
   const handleEventNameChange = (e) => {
-    console.log("change");
     dispatch(setEventData({ name: e.target.value }));
   };
 
   const handleAlldayOnChange = (e) => {
     dispatch(
       setEventData({
-        type: e.target.checked ? "allday" : "part",
+        eventType: e.target.checked ? "allday" : "part",
         duration: 1,
       })
     );
@@ -68,12 +82,31 @@ export default function Event() {
     dispatch(setEventData({ description: e.target.value }));
   };
 
-  const handleHoldingChange = (prop) => {
-    return (dateTime) => {
-      console.log(dateTime)
-      dispatch(setEventData({ [prop]: dateTime }));
-    };
+  const handlePickStartChange = (dateTime) => {
+    dispatch(setEventData({ pickStart: dateTime }));
   };
+  const handlePickEndChange = (dateTime) => {
+    dispatch(setEventData({ pickEnd: dateTime }));
+  };
+
+  const handleAddRange = (range) => {
+    
+    dispatch(addNoRepeatRange(range))
+      .then(() => setAddRangeError(false))
+      .catch(() => setAddRangeError(true));
+  };
+
+  const resetAddRangeError = () => {
+    setAddRangeError(false);
+  };
+
+  const handleCreateEvent = () => {
+    dispatch(createEventReq(event))
+  };
+
+  console.log('event pick time')
+  console.log(event.pickStart)
+  console.log(event.pickEnd)
 
   const Pannels = {
     活動資訊: (
@@ -81,15 +114,15 @@ export default function Event() {
         <EventName value={event.name} onChange={handleEventNameChange} />
         <EventDuration
           duration={event.duration}
-          isAllday={event.type === "allday"}
+          isAllday={event.eventType === "allday"}
           alldayOnChange={handleAlldayOnChange}
           durationOnChange={handleDurationOnChange}
         />
         <EventPickRange
           start={event.pickStart}
           end={event.pickEnd}
-          onStartChange={handleHoldingChange("pickStart")}
-          onEndChange={handleHoldingChange("pickEnd")}
+          onStartChange={handlePickStartChange}
+          onEndChange={handlePickEndChange}
         />
         <EventInfo
           launcher={event.launcher}
@@ -100,18 +133,19 @@ export default function Event() {
         <EventSetting />
       </>
     ),
-  };
-
-  /* ,
-    投票時段資訊: (
+    可參與時間範圍: (
       <>
-        <PickTimeFilter />
-        <PickOverview />
+        <ListItem text="預計舉辦時間">
+          <Range ranges={event.ranges} />
+          <AddRange
+            addRange={handleAddRange}
+            addRangeError={addRangeError}
+            resetAddRangeError={resetAddRangeError}
+            type={event.eventType}
+          />
+        </ListItem>
       </>
-    ), */
-
-  const logState = () => {
-    console.log(event);
+    ),
   };
 
   return (
@@ -123,7 +157,7 @@ export default function Event() {
               variant="contained"
               color="primary"
               mainTheme={true}
-              onClick={logState}
+              onClick={handleCreateEvent}
             >
               建立活動
             </ListBottomButton>

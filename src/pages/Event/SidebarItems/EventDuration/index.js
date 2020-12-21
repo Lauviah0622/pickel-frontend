@@ -1,1 +1,1 @@
-export { default } from './EventDuration.jsx'
+export { default } from './EventDuration.jsx';
