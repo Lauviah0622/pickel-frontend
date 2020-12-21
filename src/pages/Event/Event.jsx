@@ -29,24 +29,18 @@ export default function Event() {
   const event = useSelector((store) => store.eventState);
   const [addRangeError, setAddRangeError] = useState(false);
 
-  console.log("event", event);
-
   // TODO: 這邊重新整理的流程(localstorage 根 redux 要什麼時候同步)要在想一下
+  // TODO: 重構rrr
 
   // TODO: allday 還有 part 要有不同的選擇器（之後再做）
 
   useEffect(() => {
-    console.log('useEffect')
     const localUnsaveEvent = getEventLocalStorage();
-    console.log('localUnsaveEvent in useEffect', localUnsaveEvent)
     if (!localUnsaveEvent) {
-      console.log('no local event')
       if (event.name.length !== 0) {
         setEventLocalStorage(event);
-        console.log('event.name.length == 0')
       } else {
         history.push("/");
-        console.log('event.name.length !== 0')
       }
       return;
     }
@@ -54,7 +48,6 @@ export default function Event() {
   }, []);
 
   useEffect(() => {
-    console.log('useEffect, event Change');
     setEventLocalStorage(event);
   }, [event]);
 

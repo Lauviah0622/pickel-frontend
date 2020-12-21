@@ -3,8 +3,6 @@ import dayjs from "dayjs";
 const UNSAVE_LOCAL = "unsaveEvent";
 
 const setEventLocalStorage = (event) => {
-  console.log('set Local event', JSON.stringify(event))
-  
   localStorage.setItem(UNSAVE_LOCAL, JSON.stringify(event));
 };
 
