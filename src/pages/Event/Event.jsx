@@ -104,9 +104,6 @@ export default function Event() {
     dispatch(createEventReq(event))
   };
 
-  console.log('event pick time')
-  console.log(event.pickStart)
-  console.log(event.pickEnd)
 
   const Pannels = {
     活動資訊: (
