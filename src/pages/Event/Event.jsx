@@ -18,8 +18,8 @@ import {
   addNoRepeatRange,
 } from "../../redux/features/event/eventSlice";
 import { getEventLocalStorage, setEventLocalStorage } from "../../utils";
-import { createEventReq } from '../../redux/features/fetchSlice/fetchSlice';
-
+import { createEventReq } from "../../redux/features/fetchSlice/fetchSlice";
+import Modal from "../../components/Modal";
 
 const EventContainer = styled.div``;
 
@@ -28,6 +28,7 @@ export default function Event() {
   const history = useHistory();
   const event = useSelector((store) => store.eventState);
   const [addRangeError, setAddRangeError] = useState(false);
+  const [modalContent, setModalContent] = useState("");
 
   // TODO: 這邊重新整理的流程(localstorage 根 redux 要什麼時候同步)要在想一下
   // TODO: 重構rrr
@@ -50,6 +51,25 @@ export default function Event() {
   useEffect(() => {
     setEventLocalStorage(event);
   }, [event]);
+
+  const handleBeforeUnload = (e) => {
+    const message = "o";
+    (e || window.event).returnValue = message;
+    return message;
+  };
+
+  // 這裡不太確定能不能這樣用，但目前似乎沒問題
+  useEffect(() => {
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
+    };
+  }, []);
+
+  // TODO: 這裡丑到榨欸...是不是可以用事件代理來處理？ => 可以加上 name，然後全部用同一個 handle 處理
+  // TODO: **加上 prop-types**
+  // TODO: 明天來處理 1. modal 的東西，包含錯誤處理
+  // TODO: 把 component 整理一下
 
   const handleEventNameChange = (e) => {
     dispatch(setEventData({ name: e.target.value }));
@@ -83,7 +103,6 @@ export default function Event() {
   };
 
   const handleAddRange = (range) => {
-    
     dispatch(addNoRepeatRange(range))
       .then(() => setAddRangeError(false))
       .catch(() => setAddRangeError(true));
@@ -93,15 +112,25 @@ export default function Event() {
     setAddRangeError(false);
   };
 
-  const handleCreateEvent = () => {
-    dispatch(createEventReq(event))
+  const clearModal = () => {
+    setModalContent("");
   };
 
+  const handleCreateEvent = () => {
+    if (event.name.length < 1) {
+      setModalContent();
+    }
+    dispatch(createEventReq(event));
+  };
 
   const Pannels = {
     活動資訊: (
       <>
-        <EventName value={event.name} onChange={handleEventNameChange} />
+        <EventName
+          value={event.name}
+          onChange={handleEventNameChange}
+          onClose={clearModal}
+        />
         <EventDuration
           duration={event.duration}
           isAllday={event.eventType === "allday"}
@@ -140,6 +169,7 @@ export default function Event() {
 
   return (
     <EventContainer>
+      <Modal open={modalContent.length > 0} content={modalContent} />
       <Sidebar
         SidebarBottomItems={
           <>
