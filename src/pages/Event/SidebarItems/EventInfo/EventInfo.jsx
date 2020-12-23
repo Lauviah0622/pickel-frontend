@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 
 import TextField from "@material-ui/core/TextField";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 import ListItem from "../../../../components/List/ListItem.jsx";
 import useEventStateProps from '../../../../hooks/useEventStateProps';
@@ -21,11 +22,12 @@ const Multiline = styled(TextField)`
 export default function EventInfo() {
 
   const [eventLauncherState, setEventLauncherState] = useEventStateProps('launcher')
+  const [eventDescriptionState, setEventDescriptionState] = useEventStateProps('description')
+
   const handleEventLauncherChange = (e) => {
     setEventLauncherState(e.target.value)
   };
 
-  const [eventDescriptionState, setEventDescriptionState] = useEventStateProps('description')
   const handleEventDescriptionChange = (e) => {
     setEventDescriptionState(e.target.value)
   };
@@ -42,6 +44,9 @@ export default function EventInfo() {
           onChange={handleEventLauncherChange}
         />
       </ItemContentBlock>
+      <FormHelperText error>
+        {eventLauncherState.length < 1 && "活動主辦人沒寫呦"}
+      </FormHelperText>
       <ItemContentBlock>
         <Multiline
           label="活動附註"
