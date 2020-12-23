@@ -5,7 +5,9 @@ import MuiInput from "@material-ui/core/Input";
 import FormHelperText from "@material-ui/core/FormHelperText";
 import EditIcon from "@material-ui/icons/Edit";
 import InputAdornment from "@material-ui/core/InputAdornment";
+
 import ListItem from "../../../../components/List/ListItem.jsx";
+import useEventStateProps from '../../../../hooks/useEventStateProps';
 
 const EventNameInput = styled(MuiInput)`
   .MuiInput-input {
@@ -14,14 +16,20 @@ const EventNameInput = styled(MuiInput)`
   }
 `;
 
-export default function EventName({ value, onChange }) {
+export default function EventName() {
+  const [eventNameState, setEventNameState] = useEventStateProps('name')
+  
+  const handleEventNameChange = (e) => {
+    setEventNameState(e.target.value)
+  };
+
   return (
     <ListItem text="活動名稱">
       <EventNameInput
-        error={value.length === 0}
-        value={value}
+        error={eventNameState.length === 0}
+        value={eventNameState}
         fullWidth
-        onChange={onChange}
+        onChange={handleEventNameChange}
         endAdornment={
           <InputAdornment position="end">
             <EditIcon />
@@ -29,7 +37,7 @@ export default function EventName({ value, onChange }) {
         }
       ></EventNameInput>
       <FormHelperText error>
-        {value.length === 0 && "活動名稱不得為空"}
+        {eventNameState.length === 0 && "活動名稱不得為空"}
       </FormHelperText>
     </ListItem>
   );

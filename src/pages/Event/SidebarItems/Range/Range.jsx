@@ -4,6 +4,9 @@ import dayjs from "dayjs";
 import "dayjs/locale/zh-tw";
 import MuiIconButton from "@material-ui/core/IconButton";
 import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
+import { useSelector, useDispatch } from "react-redux";
+
+import { deleteRange } from "../../../../redux/features/event/eventSlice";
 
 const RangeContainer = styled.div`
   width: 100%;
@@ -29,7 +32,7 @@ const RangeContainer = styled.div`
   }
 `;
 
-function DateTimeRange({ start, end }) {
+function DateTimeRange({ start, end, deleteOnClick }) {
   const rangeStart = dayjs(start);
   const rangeEnd = dayjs(end);
   let range;
@@ -68,7 +71,7 @@ function DateTimeRange({ start, end }) {
   return (
     <RangeContainer>
       <div className="range__adorment">
-        <IconButton size="small">
+        <IconButton size="small" onClick={deleteOnClick}>
           <ClearRoundedIcon />
         </IconButton>
       </div>
@@ -89,14 +92,27 @@ const EmptyMessage = styled.div`
   margin: auto;
 `;
 
-export default function Range({ ranges }) {
+export default function Range() {
+
+  const eventRangesState = useSelector(store => store.eventState.event.ranges)
+  const dispatch = useDispatch();
+  const handleRangeDeleteOnclick = (i) => () => {
+    dispatch(deleteRange(i));
+  };
   return (
     <>
-      {ranges.length === 0
-        ? <EmptyMessage>還加沒加入任何範圍</EmptyMessage>
-        : ranges.map((range, i) => (
-            <DateTimeRange start={range.start} end={range.end} key={i} />
-          ))}
+      {eventRangesState.length === 0 ? (
+        <EmptyMessage>還加沒加入任何範圍</EmptyMessage>
+      ) : (
+        eventRangesState.map((range, i) => (
+          <DateTimeRange
+            start={range.start}
+            end={range.end}
+            key={i}
+            deleteOnClick={handleRangeDeleteOnclick(i)}
+          />
+        ))
+      )}
     </>
   );
 }

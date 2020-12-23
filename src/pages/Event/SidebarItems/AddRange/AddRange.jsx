@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import DateFnsUtils from "@date-io/date-fns";
 import dayjs from "dayjs";
+import { useSelector, useDispatch } from "react-redux";
+
 import {
   MuiPickersUtilsProvider,
   KeyboardDateTimePicker as MuiKeyboardDateTimePicker,
@@ -11,6 +13,7 @@ import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
 import { getHalfHourStart } from "../../../../utils";
+import { addNoRepeatRange } from "../../../../redux/features/event/eventSlice";
 
 const IconButton = styled(MuiIconButton)`
   position: relative;
@@ -28,34 +31,58 @@ const AddPeriodContainer = styled.div`
   display: flex;
 `;
 
-export default function AddRange({
-  addRange,
-  addRangeError,
-  resetAddRangeError,
-  type,
-}) {
-  const defaultRange =
-    type === "part"
-      ? [
-          getHalfHourStart(Date()),
-          dayjs(getHalfHourStart(Date())).add(15, "m").toDate(),
-        ]
-      : [
-          getHalfHourStart(Date()),
-          dayjs(getHalfHourStart(Date())).add(1, "d").toDate(),
-        ];
+const createDefaultRange = (eventType, duration, defaultRangeStart) => {
+  return eventType === "part"
+    ? [
+        getHalfHourStart(dayjs(defaultRangeStart)),
+        dayjs(getHalfHourStart(dayjs(defaultRangeStart)))
+          .add(duration * 15, "m")
+          .toDate(),
+      ]
+    : [
+        getHalfHourStart(dayjs(defaultRangeStart)),
+        dayjs(getHalfHourStart(dayjs(defaultRangeStart)))
+          .add(duration, "d")
+          .toDate(),
+      ];
+};
+
+export default function AddRange() {
+  const dispatch = useDispatch();
+  const { event } = useSelector((store) => store.eventState);
+  const [addRangeError, setAddRangeError] = useState(false);
+
+  const defaultRange = createDefaultRange(
+    event.eventType,
+    event.duration,
+    dayjs(event.pickEnd).add(1, "d")
+  );
 
   const [start, setStart] = useState(defaultRange[0]);
   const [end, setEnd] = useState(defaultRange[1]);
+
   const handleAddClick = () => {
     if (start >= end) return;
-    addRange({ start, end });
+    dispatch(addNoRepeatRange({ start, end }))
+      .then(() => setAddRangeError(''))
+      .catch((err) => setAddRangeError(err.message));
   };
+
+  const resetAddRangeError = () => {
+    setAddRangeError('')
+  }
 
   useEffect(() => {
     setStart(defaultRange[0]);
-    setEnd(defaultRange[1])
-  }, [type])
+    setEnd(defaultRange[1]);
+  }, [event]);
+
+  const handleStartOnchange = (dateTimeValue) => {
+    const unit = event.eventType === "part" ? "minute" : "day";
+    const addValue = event.eventType === "part" ? 15 : 1;
+    setStart(dateTimeValue);
+    setEnd(dayjs(dateTimeValue).add(addValue * event.duration, unit));
+  };
 
   return (
     <AddPeriodContainer>
@@ -70,14 +97,14 @@ export default function AddRange({
             ampm={false}
             minutesStep={15}
             value={start}
-            onChange={setStart}
+            onChange={handleStartOnchange}
             onClick={resetAddRangeError}
             disablePast
             format="yyyy/MM/dd HH:mm"
           />
           <ItemText>至</ItemText>
           <MuiKeyboardDateTimePicker
-            error={start >= end || addRangeError}
+            error={start >= end || addRangeError.length > 0}
             minDate={start}
             ampm={false}
             minutesStep={15}
@@ -91,7 +118,7 @@ export default function AddRange({
         </MuiPickersUtilsProvider>
         <FormHelperText error>
           {start >= end ? "時段結束需要晚於時段開始" : ""}
-          {addRangeError && "已有重複的時段"}
+          {addRangeError}
         </FormHelperText>
       </div>
     </AddPeriodContainer>

@@ -1,9 +1,10 @@
 import React from "react";
 
+
 import ListItem from "../../../../components/List/ListItem.jsx";
-// import SelectField from "./SelectField.jsx";
 import SelectField from "../../../../components/List/SelectField.jsx";
 import ListCheckbox from "../../../../components/List/ListCheckbox.jsx";
+import useEventStateProps from '../../../../hooks/useEventStateProps';
 
 const alldayOptions = Array(7)
   .fill(0)
@@ -33,24 +34,30 @@ const partOptions = (() => {
   return arr;
 })();
 
-export default function EventDuration({
-  duration,
-  durationOnChange,
-  isAllday,
-  alldayOnChange,
-}) {
+export default function EventDuration() {
+  const [eventDurationState, setEventDurationState] = useEventStateProps('duration')
+  const [eventTypeState, setEventTypeState] = useEventStateProps('eventType')
+
+  const handleDurationChange = (e) => {
+    setEventDurationState(e.target.value)
+  }
+  const handleTypeChange = (e) => {
+    setEventTypeState(e.target.checked ? "allday" : "part")
+    setEventDurationState(1)
+  }
+
   return (
     <ListItem text="活動時長">
       <div>
         <SelectField
-          options={isAllday ? alldayOptions : partOptions}
-          value={duration}
-          onChange={durationOnChange}
+          options={eventTypeState === 'allday' ? alldayOptions : partOptions}
+          value={eventDurationState}
+          onChange={handleDurationChange}
         />
         <ListCheckbox
           label="全天活動"
-          checked={isAllday}
-          onChange={alldayOnChange}
+          checked={eventTypeState === 'allday'}
+          onChange={handleTypeChange}
         />
       </div>
       <div></div>

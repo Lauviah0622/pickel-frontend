@@ -9,15 +9,9 @@ import EventName from "./SidebarItems/EventName";
 import EventDuration from "./SidebarItems/EventDuration";
 import EventPickRange from "./SidebarItems/EventPickRange";
 import EventInfo from "./SidebarItems/EventInfo";
-import EventSetting from "./SidebarItems/EventSetting";
 import Range from "./SidebarItems/Range";
 import AddRange from "./SidebarItems/AddRange";
 import ListItem from "../../components/List/ListItem.jsx";
-import {
-  setEventData,
-  addNoRepeatRange,
-} from "../../redux/features/event/eventSlice";
-import { getEventLocalStorage, setEventLocalStorage } from "../../utils";
 import { createEventReq } from "../../redux/features/fetchSlice/fetchSlice";
 import Modal from "../../components/Modal";
 
@@ -26,37 +20,32 @@ const EventContainer = styled.div``;
 export default function Event() {
   const dispatch = useDispatch();
   const history = useHistory();
-  const event = useSelector((store) => store.eventState);
-  const [addRangeError, setAddRangeError] = useState(false);
+  const { event} = useSelector((store) => store.eventState);
+  const { status } = useSelector((store) => store.statusState);
+
+  // eslint-disable-next-line no-unused-vars
   const [modalContent, setModalContent] = useState("");
 
-  // TODO: 這邊重新整理的流程(localstorage 根 redux 要什麼時候同步)要在想一下
+
+  /** TODO: 原本是主動叫出 localsotrage 的功能，現在的想法是
+   * 1. 每次改動資料時都把內容存在 event
+   * 2. 重新進來（entry），發現有存檔時，讓使用者決定要不要讀入存檔
+   * 3. [x] 如果在 編輯活動的部份重新整理，一律直接跳回 entry 
+   */
+  
   // TODO: 重構rrr
 
   // TODO: allday 還有 part 要有不同的選擇器（之後再做）
-
-  useEffect(() => {
-    const localUnsaveEvent = getEventLocalStorage();
-    if (!localUnsaveEvent) {
-      if (event.name.length !== 0) {
-        setEventLocalStorage(event);
-      } else {
-        history.push("/");
-      }
-      return;
-    }
-    dispatch(setEventData(localUnsaveEvent));
-  }, []);
-
-  useEffect(() => {
-    setEventLocalStorage(event);
-  }, [event]);
 
   const handleBeforeUnload = (e) => {
     const message = "o";
     (e || window.event).returnValue = message;
     return message;
   };
+
+  if (!status) {
+    history.push('/')
+  }
 
   // 這裡不太確定能不能這樣用，但目前似乎沒問題
   useEffect(() => {
@@ -71,97 +60,30 @@ export default function Event() {
   // TODO: 明天來處理 1. modal 的東西，包含錯誤處理
   // TODO: 把 component 整理一下
 
-  const handleEventNameChange = (e) => {
-    dispatch(setEventData({ name: e.target.value }));
-  };
-
-  const handleAlldayOnChange = (e) => {
-    dispatch(
-      setEventData({
-        eventType: e.target.checked ? "allday" : "part",
-        duration: 1,
-      })
-    );
-  };
-
-  const handleDurationOnChange = (e) => {
-    dispatch(setEventData({ duration: e.target.value }));
-  };
-
-  const handleLauncherChange = (e) => {
-    dispatch(setEventData({ launcher: e.target.value }));
-  };
-  const handleDesChange = (e) => {
-    dispatch(setEventData({ description: e.target.value }));
-  };
-
-  const handlePickStartChange = (dateTime) => {
-    dispatch(setEventData({ pickStart: dateTime }));
-  };
-  const handlePickEndChange = (dateTime) => {
-    dispatch(setEventData({ pickEnd: dateTime }));
-  };
-
-  const handleAddRange = (range) => {
-    dispatch(addNoRepeatRange(range))
-      .then(() => setAddRangeError(false))
-      .catch(() => setAddRangeError(true));
-  };
-
-  const resetAddRangeError = () => {
-    setAddRangeError(false);
-  };
-
-  const clearModal = () => {
-    setModalContent("");
-  };
+  /**
+   * TODO: 錯誤訊息有兩種作法 
+   * 1. 錯誤訊息只在 UI 上面檢查，不改變 state => 比較不耗資源
+   * 2. state 改變就做檢查，這個很耗資源，如果要這樣做可能要用 throlltle 來處理
+   */
 
   const handleCreateEvent = () => {
-    if (event.name.length < 1) {
-      setModalContent();
-    }
     dispatch(createEventReq(event));
   };
 
   const Pannels = {
     活動資訊: (
       <>
-        <EventName
-          value={event.name}
-          onChange={handleEventNameChange}
-          onClose={clearModal}
-        />
-        <EventDuration
-          duration={event.duration}
-          isAllday={event.eventType === "allday"}
-          alldayOnChange={handleAlldayOnChange}
-          durationOnChange={handleDurationOnChange}
-        />
-        <EventPickRange
-          start={event.pickStart}
-          end={event.pickEnd}
-          onStartChange={handlePickStartChange}
-          onEndChange={handlePickEndChange}
-        />
-        <EventInfo
-          launcher={event.launcher}
-          description={event.description}
-          infoOnchange={handleLauncherChange}
-          desOnchange={handleDesChange}
-        />
-        <EventSetting />
+        <EventName/>
+        <EventDuration/>
+        <EventPickRange/>
+        <EventInfo/>
       </>
     ),
-    可參與時間範圍: (
+    預計舉辦時間範圍: (
       <>
         <ListItem text="預計舉辦時間">
-          <Range ranges={event.ranges} />
-          <AddRange
-            addRange={handleAddRange}
-            addRangeError={addRangeError}
-            resetAddRangeError={resetAddRangeError}
-            type={event.eventType}
-          />
+          <Range />
+          <AddRange />
         </ListItem>
       </>
     ),

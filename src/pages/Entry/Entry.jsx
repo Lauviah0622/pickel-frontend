@@ -5,9 +5,8 @@ import MuiButton from "@material-ui/core/Button";
 
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
-import { setEventData } from '../../redux/features/event/eventSlice';
+import { setEventProps } from '../../redux/features/event/eventSlice';
 import { setStatusData } from '../../redux/features/status/statusSlice';
-import { getEventLocalStorage } from '../../utils';
 
 
 const Root = styled.div`
@@ -71,15 +70,11 @@ export default function Entry() {
 
   const handleButtonClick = () => {
     dispatch(setStatusData('client'))
-    dispatch(setEventData({name: eventName}))
+    dispatch(setEventProps({name: eventName}))
     history.push('/event');
   };
 
-  const eventState = useSelector((store) => store.eventState);
   const statusState = useSelector((store) => store.statusState);
-  
-  console.log(eventState)
-  console.log(statusState)
 
   useEffect(() => {
     if (statusState === 'picker') {
@@ -87,11 +82,6 @@ export default function Entry() {
     } else if (statusState === 'launcher') {
       history.push('/event')
     }
-    const localUnsaveEvent = getEventLocalStorage();
-    if (!localUnsaveEvent) return 
-
-    // 表示已經有 unsafe Event 了，但是想反回到 entry page
-    history.push('/event')
   }, []);
 
   return (
