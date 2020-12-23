@@ -3,6 +3,8 @@
   --color-priority-low: #ff535342;
   --color-priority-medium: #ffe17c4a;
   --color-priority-high: #8bc34a4a;
+  --color-error-main: #e64539aa;
+  --color-error-light: #e57373aa;
   --spacing: 8px;
 }
 

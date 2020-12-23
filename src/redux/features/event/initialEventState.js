@@ -12,13 +12,5 @@ const initialEventState = {
   ranges: [],
 };
 
-const initialErrorState = Object.keys(initialEventState).reduce(
-  (prevObj, key) => {
-    const obj = { ...prevObj };
-    obj[key] = [];
-    return obj;
-  },
-  {}
-);
 
-export { initialEventState, initialErrorState };
+export default initialEventState ;

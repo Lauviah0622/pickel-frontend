@@ -1,23 +1,6 @@
 import dayjs from "dayjs";
 
-const UNSAVE_LOCAL = "unsaveEvent";
-
-
-const setEventLocalStorage = (event) => {
-  localStorage.setItem(UNSAVE_LOCAL, JSON.stringify(event));
-};
-
-const getEventLocalStorage = () => {
-  const localJSON = JSON.parse(localStorage.getItem(UNSAVE_LOCAL));
-  if (!localJSON) return null;
-  return localJSON;
-};
-
-const cleanEventLocalStorage = () => {
-  localStorage.removeItem(UNSAVE_LOCAL);
-};
-
-const getHalfHourStart = (time) => {
+export const getHalfHourStart = (time) => {
   const dayjsTime = dayjs(time);
   const halfStart = dayjsTime.startOf("hour");
   return dayjsTime.get("minute") > 30
@@ -25,23 +8,42 @@ const getHalfHourStart = (time) => {
     : halfStart.set("minute", 30).toISOString();
 };
 
-const isValidDate = (input) => {
-  return dayjs(input).isValid()
-}
+export const isValidDate = (input) => {
+  return dayjs(input).isValid();
+};
 
-const isValidDuration = (start, end, type, minDuration = 1) => {
+export const isValidDuration = (start, end, type, minDuration = 1) => {
   const durationStart = dayjs(start);
   const durationEnd = dayjs(end);
-  return type === 'part' 
-  ? dayjs(durationEnd).diff(durationStart, 'minute') / 15 >= minDuration
-  : dayjs(durationEnd).diff(durationStart, 'day') >= minDuration
-  };
-
-export {
-  setEventLocalStorage,
-  getEventLocalStorage,
-  cleanEventLocalStorage,
-  getHalfHourStart,
-  isValidDate,
-  isValidDuration
+  return type === "part"
+    ? dayjs(durationEnd).diff(durationStart, "minute") / 15 >= minDuration
+    : dayjs(durationEnd).diff(durationStart, "day") >= minDuration;
 };
+
+const checkIsRangeNoRepeat = (ranges, addRangeStart, addRangeEnd) => {
+  if (ranges.length < 1) return true;
+  return !ranges
+    .map((range) => {
+      const startIsValid = dayjs(addRangeStart).isSameOrAfter(range.end);
+      const endIsValid = dayjs(addRangeEnd).isSameOrBefore(range.start);
+      return startIsValid || endIsValid;
+    })
+    .includes(false);
+};
+
+export const checkIsRangeValid = ({start, end}, eventType, duration, pickEnd, ranges, conclusion) => {
+  const res = {};
+  res.isEndLateThenStart = dayjs(end).isAfter(start);
+  res.isLongerThenDuration = isValidDuration(
+    start,
+    end,
+    eventType,
+    duration
+  );
+  res.isLaterThanPickEnd = dayjs(start).isAfter(dayjs(pickEnd));
+  if (ranges != null) {
+    res.isNoRepeat = checkIsRangeNoRepeat(ranges, start, end);
+  }
+  return conclusion ? !Object.values(res).includes(false) : res ;
+};
+

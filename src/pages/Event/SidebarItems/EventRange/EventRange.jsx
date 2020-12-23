@@ -8,12 +8,17 @@ import { useSelector, useDispatch } from "react-redux";
 
 import { deleteRange } from "../../../../redux/features/event/eventSlice";
 
+import { checkIsRangeValid } from "../../../../utils";
+
 const RangeContainer = styled.div`
   width: 100%;
   /* border: 1px solid black; */
   padding: 4px;
   border-radius: 4px;
   display: flex;
+  margin-bottom: var(--spacing);
+  ${(props) => props.inValid && "background: #e6453977;"}
+
   .range__date {
     flex-grow: 1;
   }
@@ -32,7 +37,7 @@ const RangeContainer = styled.div`
   }
 `;
 
-function DateTimeRange({ start, end, deleteOnClick }) {
+function DateTimeRange({ start, end, deleteOnClick, inValid }) {
   const rangeStart = dayjs(start);
   const rangeEnd = dayjs(end);
   let range;
@@ -69,7 +74,7 @@ function DateTimeRange({ start, end, deleteOnClick }) {
     );
   }
   return (
-    <RangeContainer>
+    <RangeContainer inValid={inValid}>
       <div className="range__adorment">
         <IconButton size="small" onClick={deleteOnClick}>
           <ClearRoundedIcon />
@@ -92,27 +97,36 @@ const EmptyMessage = styled.div`
   margin: auto;
 `;
 
-export default function Range() {
-
-  const eventRangesState = useSelector(store => store.eventState.event.ranges)
+export default function EventRanges() {
+  const { ranges, pickEnd, duration, eventType } = useSelector(
+    (store) => store.eventState.event
+  );
   const dispatch = useDispatch();
   const handleRangeDeleteOnclick = (i) => () => {
     dispatch(deleteRange(i));
   };
-  return (
-    <>
-      {eventRangesState.length === 0 ? (
-        <EmptyMessage>還加沒加入任何範圍</EmptyMessage>
-      ) : (
-        eventRangesState.map((range, i) => (
-          <DateTimeRange
-            start={range.start}
-            end={range.end}
-            key={i}
-            deleteOnClick={handleRangeDeleteOnclick(i)}
-          />
-        ))
-      )}
-    </>
-  );
+
+  const rangesValidation = []
+  let rangesContent;
+  if (ranges.length === 0) {
+    rangesContent = <EmptyMessage>還加沒加入任何範圍</EmptyMessage>;
+  } else {
+    rangesContent = ranges.map((range, i) => {
+      const invalid = Object.values(
+        checkIsRangeValid(range, eventType, duration, pickEnd)
+      ).includes(false);
+      rangesValidation.push(invalid)
+      return (
+        <DateTimeRange
+          start={range.start}
+          end={range.end}
+          key={i}
+          deleteOnClick={handleRangeDeleteOnclick(i)}
+          inValid={invalid}
+        />
+      );
+    });
+  }
+
+  return <>{rangesContent}</>;
 }

@@ -4,9 +4,9 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 
-import { initialEventState, initialErrorState } from "./initialState";
+import initialEventState from "./initialEventState";
 
-import propValidations from './propValidations';
+import { checkIsRangeValid } from "../../../utils";
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
@@ -15,20 +15,20 @@ const eventSlice = createSlice({
   name: "eventState",
   initialState: {
     event: { ...initialEventState },
-    errors: { ...initialErrorState },
+    isRangesAllValid: true,
   },
   reducers: {
     setEventData({ event }, { payload: [prop, value] }) {
       event[prop] = value;
-    },
-    setValidation({ errors }, { payload: [prop, isValid] }) {
-      errors[prop] = isValid;
     },
     addRange({ event }, { payload }) {
       event.ranges.push(payload);
     },
     deleteRangeByIndex({ event }, { payload }) {
       event.ranges.splice(payload, 1);
+    },
+    setRangesValidation(state, { payload }) {
+      state.isRangesAllValid = payload;
     },
   },
 });
@@ -39,20 +39,30 @@ export const {
   addRange,
   deleteRangeByIndex,
   setValidation,
+  setRangesValidation,
 } = eventSlice.actions;
 
-export const setEventProps = (payload) => (dispatch) => {
+export const setEventProps = (payload) => (dispatch, getState) => {
   Object.entries(payload).forEach(([prop, value]) => {
     if (value instanceof Date) {
       value = dayjs(value).toISOString();
     }
+    if (["duration", "eventType", "pickEnd"].includes(prop)) {
+      const updatedEvent = { ...getState().eventState.event };
+      updatedEvent[prop] = value;
+      const updatedRangeCheck = updatedEvent.ranges.map((range) => {
+        return checkIsRangeValid(
+          range,
+          updatedEvent.eventType,
+          updatedEvent.duration,
+          updatedEvent.pickEnd,
+          null,
+          true
+        );
+      });
+      dispatch(setRangesValidation(!updatedRangeCheck.includes(false)));
+    }
     dispatch(setEventData([prop, value]));
-    const isValid = propValidations[prop]
-      .map(({ validation, message }) => {
-        return validation(value) ? null : message;
-      })
-      .filter((err) => err);
-    dispatch(setValidation([prop, isValid]));
   });
 };
 
@@ -60,39 +70,15 @@ export const setUnsaveEventData = (event) => async (dispatch) => {
   dispatch(setEventData(event));
 };
 
-export const addNoRepeatRange = (newRange) => async (dispatch, getState) => {
-  const { eventState } = getState();
-
+export const addNoRepeatRange = (newRange) => async (dispatch) => {
   const serializeNewRange = {
     start: dayjs(newRange.start).toISOString(),
     end: dayjs(newRange.end).toISOString(),
   };
   dispatch(addRange(serializeNewRange));
-
-  const newRangeClone = [...eventState.event.ranges].push(serializeNewRange);
-
-  const isValid = propValidations.ranges
-    .map(({ validation, message }) => {
-      return validation(newRangeClone) ? null : message;
-    })
-    .filter((err) => err);
-  dispatch(setValidation(["ranges", isValid]));
-
-  return Promise.resolve(true);
+  
 };
 
-export const deleteRange = (rangeIndex) => (dispatch, getState) => {
-  const { eventState } = getState();
-  const newRangeClone = [...eventState.event.ranges].splice(rangeIndex, 1);
-  const valudations = propValidations.ranges;
-
-  // TODO: 這個根上面的 props 的設定一起抽出來
-
-  const isValid = valudations
-    .map(({ validation, message }) => {
-      return validation(newRangeClone) ? null : message;
-    })
-    .filter((err) => err);
-  dispatch(setValidation(["ranges", isValid]));
+export const deleteRange = (rangeIndex) => (dispatch) => {
   dispatch(deleteRangeByIndex(rangeIndex));
 };

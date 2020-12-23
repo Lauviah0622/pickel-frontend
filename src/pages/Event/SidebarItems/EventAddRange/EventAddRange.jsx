@@ -14,7 +14,10 @@ import MuiIconButton from "@material-ui/core/IconButton";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
-import { getHalfHourStart, isValidDuration } from "../../../../utils";
+import {
+  getHalfHourStart,
+  checkIsRangeValid,
+} from "../../../../utils";
 import { addNoRepeatRange } from "../../../../redux/features/event/eventSlice";
 
 dayjs.extend(isSameOrAfter);
@@ -44,18 +47,6 @@ const DateTimePicker = (props) => (
     {...props}
   />
 );
-
-const checkIsRangeRepeat = (ranges, addRangeStart, addRangeEnd) => {
-  if (ranges.length < 1) return false;
-
-  return ranges
-    .map((range) => {
-      const startIsValid = dayjs(addRangeStart).isSameOrAfter(range.end);
-      const endIsValid = dayjs(addRangeEnd).isSameOrBefore(range.start);
-      return startIsValid || endIsValid;
-    })
-    .includes(false);
-};
 
 const createDefaultRange = (eventType, duration, defaultRangeStart) => {
   return eventType === "part"
@@ -88,24 +79,12 @@ export default function AddRange() {
   const [start, setStart] = useState(defaultRange[0]);
   const [end, setEnd] = useState(defaultRange[1]);
 
-  const isRangeLongerThenDuration = isValidDuration(
-    start,
-    end,
-    eventType,
-    duration
-  );
-  const isRangeLaterThanPickEnd = dayjs(start).isAfter(dayjs(pickEnd));
-  const isRangeRepeat = checkIsRangeRepeat(ranges, start, end);
+  const isRangeValid = checkIsRangeValid({ start, end }, eventType, duration, pickEnd, ranges);
 
   const handleAddClick = () => {
-    if (
-      start >= end ||
-      !isRangeLaterThanPickEnd ||
-      !isRangeLongerThenDuration ||
-      isRangeRepeat
-    )
+    if (Object.values(isRangeValid).includes(false))
       return;
-    dispatch(addNoRepeatRange({ start, end }))
+    dispatch(addNoRepeatRange({ start, end }));
   };
 
   useEffect(() => {
@@ -133,22 +112,15 @@ export default function AddRange() {
       </div>
       <div className="range__date">
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <DateTimePicker
-            onChange={handleStartOnchange}
-            value={start}
-          />
+          <DateTimePicker onChange={handleStartOnchange} value={start} />
           <ItemText>至</ItemText>
-          <DateTimePicker
-            value={end}
-            onChange={setEnd}
-            minDate={start}
-          />
+          <DateTimePicker value={end} onChange={setEnd} minDate={start} />
         </MuiPickersUtilsProvider>
         <FormHelperText error>
-          {start >= end && "時段結束需要晚於時段開始"}
-          {!isRangeLongerThenDuration && "至少要大於預計活動時長喔"}
-          {!isRangeLaterThanPickEnd && "必須晚於投票時間"}
-          {isRangeRepeat && "時段重複囉"}
+          {!isRangeValid.isEndLateThenStart && "時段結束需要晚於時段開始"}
+          {!isRangeValid.isLongerThenDuration && "至少要大於預計活動時長喔"}
+          {!isRangeValid.isLaterThanPickEnd && "必須晚於投票時間"}
+          {!isRangeValid.isNoRepeat && "時段重複囉"}
         </FormHelperText>
       </div>
     </AddPeriodContainer>

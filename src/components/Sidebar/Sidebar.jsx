@@ -5,8 +5,8 @@ import MuiDrawer from "@material-ui/core/Drawer";
 import MuiList from "@material-ui/core/List";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
-
 import Divider from "@material-ui/core/Divider";
+import FormHelperText from "@material-ui/core/FormHelperText";
 
 const drawerWidth = "var(--drawer-width)";
 const SideBarContainer = styled(MuiDrawer)`
@@ -28,29 +28,34 @@ const SideBarContainer = styled(MuiDrawer)`
   }
 
   .tabs {
-    flex-shrink:0;
+    flex-shrink: 0;
   }
-
-
 `;
 
 const SidebarList = styled(MuiList)`
   /* flex-grow: 4; */
   flex-grow: 1;
-    overflow: scroll;
+  overflow: scroll;
 `;
 
 const SidebarBottom = styled.div`
   padding: 16px 16px; /* refer to Mui */
-  display: flex;
   box-sizing: border-box;
   background-color: white;
-  flex-shrink:0;
-
-  /* flex-wrap: nowrap; */
-  & button + button {
-    margin-left: 8px;
+  flex-shrink: 0;
+  .sidebar__bottomBtnContainer {
+    display: flex;
+    & button + button {
+      margin-left: 8px;
+    }
   }
+
+  .sidebar__bottomErrorMessage {
+    font-size: 1rem;
+    /* text-align: center; */
+    padding-bottom: var(--spacing);
+  }
+  /* flex-wrap: nowrap; */
 `;
 
 const StyledTab = styled(Tab)`
@@ -59,7 +64,11 @@ const StyledTab = styled(Tab)`
   }
 `;
 
-export default function Sidebar({ children, SidebarBottomItems }) {
+export default function Sidebar({
+  children,
+  SidebarBottomItems,
+  errorMessage,
+}) {
   const [value, setValue] = useState(0);
   const handleChange = (event, newValue) => {
     setValue(newValue);
@@ -96,7 +105,12 @@ export default function Sidebar({ children, SidebarBottomItems }) {
           {PannelContent}
         </SidebarList>
       ))}
-      <SidebarBottom>{SidebarBottomItems}</SidebarBottom>
+      <SidebarBottom>
+        <FormHelperText className="sidebar__bottomErrorMessage" error>
+          {errorMessage}
+        </FormHelperText>
+        <div className="sidebar__bottomBtnContainer">{SidebarBottomItems}</div>
+      </SidebarBottom>
     </SideBarContainer>
   );
 }
