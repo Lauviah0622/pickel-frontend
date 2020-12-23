@@ -12,7 +12,7 @@ const initialEventState = {
   ranges: [],
 };
 
-const initialPropsValidationState = Object.keys(initialEventState).reduce(
+const initialErrorState = Object.keys(initialEventState).reduce(
   (prevObj, key) => {
     const obj = { ...prevObj };
     obj[key] = [];
@@ -21,4 +21,4 @@ const initialPropsValidationState = Object.keys(initialEventState).reduce(
   {}
 );
 
-export { initialEventState, initialPropsValidationState };
+export { initialEventState, initialErrorState };

@@ -35,7 +35,7 @@ export default function Event() {
   // TODO: [phase2]allday 還有 part 要有不同的選擇器（之後再做）
   
   // TODO: **加上 prop-types**
-  // TODO: 明天來處理 1. modal 的東西，包含錯誤處理
+  // TODO: 處理modal 的東西
   
   /**
    * TODO: [phase0]error message 的管理
@@ -43,10 +43,13 @@ export default function Event() {
    * 2. state 改變就做檢查，這個很耗資源，如果要這樣做可能要用 throlltle 來處理
    * 
    * 最後決定 => 
-   * 1. 資料個別的錯誤，個別顯示錯誤訊息，寫在 component 裡面 像是 add range 的錯誤
+   * 1. [x] 資料個別的錯誤，個別顯示錯誤訊息，寫在 component 裡面 像是 add range 的錯誤
    * 
-   * 2. 共有的錯誤 ex: range 不能小於 duration，寫在 state 裡面
+   * 2. 共有的錯誤 ex: 設定好 range 之後 range 不能小於 duration，寫在 state 裡面
    * 
+   * 
+   * TODO: 幫錯誤的 range 加上 hightlight
+   * TODO: 加上一個 event 範圍的錯誤只是在 button 上面
    */
 
   const handleBeforeUnload = (e) => {

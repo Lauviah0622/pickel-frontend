@@ -4,32 +4,25 @@ import dayjs from "dayjs";
 import isSameOrAfter from "dayjs/plugin/isSameOrAfter";
 import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 
-import { initialEventState, initialPropsValidationState } from "./initialState";
+import { initialEventState, initialErrorState } from "./initialState";
 
 import propValidations from './propValidations';
 
 dayjs.extend(isSameOrAfter);
 dayjs.extend(isSameOrBefore);
 
-/**
- * validation => true 表示正確
- *
- * TODO: 有機會再補完 validation，還需要弄一個個別的根 全部的 validation
- * TODO: 有沒有辦法每次更新完 redux 的 state 就自己檢查？
- */
-
 const eventSlice = createSlice({
   name: "eventState",
   initialState: {
     event: { ...initialEventState },
-    propsValidation: { ...initialPropsValidationState },
+    errors: { ...initialErrorState },
   },
   reducers: {
     setEventData({ event }, { payload: [prop, value] }) {
       event[prop] = value;
     },
-    setValidation({ propsValidation }, { payload: [prop, isValid] }) {
-      propsValidation[prop] = isValid;
+    setValidation({ errors }, { payload: [prop, isValid] }) {
+      errors[prop] = isValid;
     },
     addRange({ event }, { payload }) {
       event.ranges.push(payload);
