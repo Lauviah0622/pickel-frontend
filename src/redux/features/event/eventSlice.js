@@ -21,6 +21,9 @@ const eventSlice = createSlice({
     setEventData({ event }, { payload: [prop, value] }) {
       event[prop] = value;
     },
+    setEvent(state, {payload}) {
+      state.event = payload
+    },
     addRange({ event }, { payload }) {
       event.ranges.push(payload);
     },
@@ -36,6 +39,7 @@ const eventSlice = createSlice({
 export default eventSlice.reducer;
 export const {
   setEventData,
+  setEvent,
   addRange,
   deleteRangeByIndex,
   setValidation,

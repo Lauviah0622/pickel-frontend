@@ -25,17 +25,17 @@ export default statusSlice.reducer;
 export const { setError } = statusSlice.actions;
 
 
-// TODO: 內容驗證改好了記得把 distpatch 加上去，然後串上回傳值做錯誤判斷
+// TODOS: 記得加上 isLoading 的繞圈圈 UI
 // eslint-disable-next-line no-unused-vars
 export const createEventReq = (eventData) => async (dispatch) => {
   try {
-    if (eventData.name.length === 0) throw Error();
     const createEventRes = await axios.post("event", eventData);
-    console.log(createEventRes);
+    if (!createEventRes.data.ok) throw Error('event Res Error');
+    return Promise.resolve(createEventRes.data.data.event.eventSuffix)
   } catch (err) {
     if (!err.response) {
-      setError(err.message);
+      dispatch(setError(err.message));
     }
-    console.log(err.response);
+    return Promise.reject(err)
   }
 };

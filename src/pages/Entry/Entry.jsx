@@ -71,7 +71,7 @@ export default function Entry() {
   const handleButtonClick = () => {
     dispatch(setStatusData('client'))
     dispatch(setEventProps({name: eventName}))
-    history.push('/event');
+    history.push('/create');
   };
 
   const statusState = useSelector((store) => store.statusState);
