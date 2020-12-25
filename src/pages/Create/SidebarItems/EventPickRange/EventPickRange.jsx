@@ -10,7 +10,7 @@ import {
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 
-import ListItem from "../../../../components/List/ListItem.jsx";
+import ListItem from "../../../../layout/Sidebar/PanelItem.jsx";
 import useEventStateProps from "../../../../hooks/useEventStateProps";
 
 const ItemText = styled.p`

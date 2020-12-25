@@ -31,19 +31,39 @@ const checkIsRangeNoRepeat = (ranges, addRangeStart, addRangeEnd) => {
     .includes(false);
 };
 
-export const checkIsRangeValid = ({start, end}, eventType, duration, pickEnd, ranges, conclusion) => {
+export const checkIsRangeValid = (
+  { start, end },
+  eventType,
+  duration,
+  pickEnd,
+  ranges,
+  conclusion
+) => {
   const res = {};
   res.isEndLateThenStart = dayjs(end).isAfter(start);
-  res.isLongerThenDuration = isValidDuration(
-    start,
-    end,
-    eventType,
-    duration
-  );
+  res.isLongerThenDuration = isValidDuration(start, end, eventType, duration);
   res.isLaterThanPickEnd = dayjs(start).isAfter(dayjs(pickEnd));
   if (ranges != null) {
     res.isNoRepeat = checkIsRangeNoRepeat(ranges, start, end);
   }
-  return conclusion ? !Object.values(res).includes(false) : res ;
+  return conclusion ? !Object.values(res).includes(false) : res;
 };
 
+export const getEventState = (event) => {
+  console.log(event.determineTime === true)
+  switch (true) {
+    case !!event.determineTime:
+      return "determined";
+    case dayjs().isAfter(dayjs(event.pickEnd)):
+      return "postPicking";
+    case dayjs(event.pickEnd).isAfter(dayjs()) &&
+      dayjs().isAfter(dayjs(event.pickStart)):
+      return "picking";
+    case dayjs(event.pickStart).isAfter(dayjs()):
+      return "prePicking";
+    case event.pickSuffix == null && event.eventSuffix == null:
+      return "draft"
+    default:
+      return "invalid";
+  }
+};

@@ -84,9 +84,9 @@ export default function Sidebar({
         variant="fullWidth"
         className="tabs"
       >
-        {Object.keys(children).map((PannelTag, index, keys) => (
+        {children.map(({label}, index, keys) => (
           <StyledTab
-            label={PannelTag}
+            label={label}
             id={index}
             disableRipple={keys.length === 1}
             style={{ cursor: keys.length === 1 && "unset" }}
@@ -95,14 +95,14 @@ export default function Sidebar({
         ))}
       </Tabs>
       <Divider />
-      {Object.values(children).map((PannelContent, index) => (
+      {children.map(({content: pannelContent}, index) => (
         <SidebarList
           value={value}
           index={index}
           hidden={value !== index}
           key={`SidebarList-${index}`}
         >
-          {PannelContent}
+          {pannelContent}
         </SidebarList>
       ))}
       <SidebarBottom>

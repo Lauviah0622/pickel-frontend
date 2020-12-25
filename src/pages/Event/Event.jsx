@@ -1,41 +1,40 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { useHistory } from "react-router-dom";
+import { useHistory, useParams } from "react-router-dom";
 
-import Sidebar from "../../components/Sidebar";
-import ListBottomButton from "../../components/List/ListBottomButton.jsx";
+import Sidebar from "../../layout/Sidebar/Sidebar.jsx";
+import ListBottomButton from "../../layout/Sidebar/SidebarFooterBtn.jsx";
 import EventName from "./SidebarItems/EventName";
 import EventDuration from "./SidebarItems/EventDuration";
 import EventPickRange from "./SidebarItems/EventPickRange";
 import EventInfo from "./SidebarItems/EventInfo";
 import EventRange from "./SidebarItems/EventRange";
 import EventAddRange from "./SidebarItems/EventAddRange";
-import ListItem from "../../components/List/ListItem.jsx";
-import { createEventReq } from "../../redux/features/fetch/fetchSlice";
+import ListItem from "../../layout/Sidebar/PanelItem.jsx";
+import { fetchEvent } from "../../redux/features/fetch/fetchSlice";
 
 const EventContainer = styled.div``;
-
+/* eslint-disable */
 export default function Event() {
   const history = useHistory();
+  const { suffix } = useParams();
   const dispatch = useDispatch();
   const { status } = useSelector((store) => store.statusState);
-  const { isRangesAllValid, event } = useSelector((store) => store.eventState);
-  // eslint-disable-next-line no-unused-vars
+  const { isRangesAllValid, event, eventState } = useSelector(
+    (store) => store.eventState
+  );
 
-  // TODO: [phase2]allday 還有 part 要有不同的選擇器（之後再做）
+  useEffect(() => {
+    dispatch(fetchEvent(suffix));
+  }, [suffix]);
 
-  // TODO: **加上 prop-types**
-
+  // TODO: 這個視窗要在做好一點，目前先這樣
   const handleBeforeUnload = (e) => {
     const message = "o";
     (e || window.event).returnValue = message;
     return message;
   };
-
-  if (!status) {
-    history.push("/");
-  }
 
   // 這裡不太確定能不能這樣用，但目前似乎沒問題
   useEffect(() => {
@@ -45,30 +44,33 @@ export default function Event() {
     };
   }, []);
 
-  const handleCreateEvent = async () => {
-    if (status !== "client" || isRangesAllValid !== true) return;
-    const eventSuffix = await dispatch(createEventReq(event));
-    history.push(`event/${eventSuffix}`);
-  };
+  const handleCreateEvent = async () => {};
 
-  const Pannels = {
-    活動資訊: (
-      <>
-        <EventName />
-        <EventDuration />
-        <EventPickRange />
-        <EventInfo />
-      </>
-    ),
-    預計舉辦時間範圍: (
-      <>
-        <ListItem text="預計舉辦時間">
-          <EventRange />
-          <EventAddRange />
-        </ListItem>
-      </>
-    ),
-  };
+  // FIXME:　改成用 array，然後是 {name, content} 的形式
+  const Pannels = [
+    {
+      label: "活動資訊",
+      content: (
+        <>
+          <EventName />
+          <EventDuration />
+          <EventPickRange />
+          <EventInfo />
+        </>
+      ),
+    },
+    {
+      label: "預計舉辦時間範圍",
+      content: (
+        <>
+          <ListItem text="預計舉辦時間">
+            <EventRange />
+            <EventAddRange />
+          </ListItem>
+        </>
+      ),
+    },
+  ];
 
   const errorMessage = (() => {
     if (event.ranges.length < 1) return "還沒填入預計舉辦時間";

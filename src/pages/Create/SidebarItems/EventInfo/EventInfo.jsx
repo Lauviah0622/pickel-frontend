@@ -4,7 +4,7 @@ import styled from "styled-components";
 import TextField from "@material-ui/core/TextField";
 import FormHelperText from "@material-ui/core/FormHelperText";
 
-import ListItem from "../../../../components/List/ListItem.jsx";
+import ListItem from "../../../../layout/Sidebar/PanelItem.jsx";
 import useEventStateProps from '../../../../hooks/useEventStateProps';
 
 

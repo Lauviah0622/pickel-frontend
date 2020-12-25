@@ -3,15 +3,15 @@ import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-import Sidebar from "../../components/Sidebar";
-import ListBottomButton from "../../components/List/ListBottomButton.jsx";
+import Sidebar from "../../layout/Sidebar/Sidebar.jsx";
+import ListBottomButton from "../../layout/Sidebar/SidebarFooterBtn.jsx";
 import EventName from "./SidebarItems/EventName";
 import EventDuration from "./SidebarItems/EventDuration";
 import EventPickRange from "./SidebarItems/EventPickRange";
 import EventInfo from "./SidebarItems/EventInfo";
 import EventRange from "./SidebarItems/EventRange";
 import EventAddRange from "./SidebarItems/EventAddRange";
-import ListItem from "../../components/List/ListItem.jsx";
+import ListItem from "../../layout/Sidebar/PanelItem.jsx";
 import { createEventReq } from "../../redux/features/fetch/fetchSlice";
 
 const EventContainer = styled.div``;
@@ -51,24 +51,30 @@ export default function Event() {
     history.push(`event/${eventSuffix}`);
   };
 
-  const Pannels = {
-    活動資訊: (
-      <>
-        <EventName />
-        <EventDuration />
-        <EventPickRange />
-        <EventInfo />
-      </>
-    ),
-    預計舉辦時間範圍: (
-      <>
-        <ListItem text="預計舉辦時間">
-          <EventRange />
-          <EventAddRange />
-        </ListItem>
-      </>
-    ),
-  };
+  const Pannels = [
+    {
+      label: "活動資訊",
+      content: (
+        <>
+          <EventName />
+          <EventDuration />
+          <EventPickRange />
+          <EventInfo />
+        </>
+      ),
+    },
+    {
+      label: "預計舉辦時間範圍",
+      content: (
+        <>
+          <ListItem text="預計舉辦時間">
+            <EventRange />
+            <EventAddRange />
+          </ListItem>
+        </>
+      ),
+    },
+  ];
 
   const errorMessage = (() => {
     if (event.ranges.length < 1) return "還沒填入預計舉辦時間";

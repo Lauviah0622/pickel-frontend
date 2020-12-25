@@ -6,13 +6,13 @@ import MuiIconButton from "@material-ui/core/IconButton";
 import AddRoundedIcon from "@material-ui/icons/AddRounded";
 import TextField from "@material-ui/core/TextField";
 
-import Sidebar from "../../components/Sidebar";
-import ListBottomButton from "../../components/List/ListBottomButton.jsx";
-import DefaultListItem from "../../components/List/ListItem.jsx";
-import Range from "../../components/List/Range.jsx";
+import Sidebar from "../../layout/Sidebar/Sidebar.jsx";
+import ListBottomButton from "../../components/list/ListBottomButton.jsx";
+import DefaultListItem from "../../components/list/ListItem.jsx";
+import Range from "../../components/list/Range.jsx";
 import Periods from "./SidebarItems/Periods";
 
-import DateTimePicker from "../../components/List/DateTimePicker.jsx";
+import DateTimePicker from "../../components/list/DateTimePicker.jsx";
 
 const Container = styled.div``;
 

@@ -1,9 +1,9 @@
 import React from "react";
 
 
-import ListItem from "../../../../components/List/ListItem.jsx";
-import SelectField from "../../../../components/List/SelectField.jsx";
-import ListCheckbox from "../../../../components/List/ListCheckbox.jsx";
+import ListItem from "../../../../layout/Sidebar/PanelItem.jsx";
+import SelectField from "../../../../layout/Sidebar/SelectField.jsx";
+import ListCheckbox from "../../../../layout/Sidebar/Checkbox.jsx";
 import useEventStateProps from '../../../../hooks/useEventStateProps';
 
 const alldayOptions = Array(7)

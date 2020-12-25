@@ -10,7 +10,7 @@ import {
 import dayjs from "dayjs";
 import { useSelector } from "react-redux";
 
-import ListItem from "../../../../components/List/ListItem.jsx";
+import ListItem from "../../../../layout/Sidebar/PanelItem.jsx";
 import useEventStateProps from "../../../../hooks/useEventStateProps";
 
 const ItemText = styled.p`
@@ -56,6 +56,7 @@ export default function EventpickRange() {
           value={eventPickStartState}
           onChange={handleEventPickStartChange}
           disablePast
+          // FIXME:呈現時間可以，如果要更改就不行？這裡要想一下業務邏輯尚要怎麼處理
           format="yyyy/MM/dd HH:mm"
         />
         <ItemText>至</ItemText>

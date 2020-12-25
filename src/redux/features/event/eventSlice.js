@@ -16,16 +16,21 @@ const eventSlice = createSlice({
   initialState: {
     event: { ...initialEventState },
     isRangesAllValid: true,
+    eventState: "draft",
+    updated: false,
   },
   reducers: {
     setEventData({ event }, { payload: [prop, value] }) {
       event[prop] = value;
     },
-    setEvent(state, {payload}) {
-      state.event = payload
+    setEvent(state, { payload }) {
+      state.event = payload;
     },
     addRange({ event }, { payload }) {
       event.ranges.push(payload);
+    },
+    setEventState(state, { payload }) {
+      state.eventState = payload;
     },
     deleteRangeByIndex({ event }, { payload }) {
       event.ranges.splice(payload, 1);
@@ -80,7 +85,6 @@ export const addNoRepeatRange = (newRange) => async (dispatch) => {
     end: dayjs(newRange.end).toISOString(),
   };
   dispatch(addRange(serializeNewRange));
-  
 };
 
 export const deleteRange = (rangeIndex) => (dispatch) => {

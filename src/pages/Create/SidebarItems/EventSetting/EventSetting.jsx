@@ -1,18 +1,18 @@
 import React from "react";
 
-import ListItem from '../../../../components/List/ListItem.jsx';
-import ListCheckbox from "../../../../components/List/ListCheckbox.jsx";
+import PanelItem from '../../../../layout/Sidebar/PanelItem.jsx';
+import ListCheckbox from "../../../../layout/Sidebar/Checkbox.jsx";
 
 
 export default function EventSetting() {
   return (
-    <ListItem text="投票設定">
+    <PanelItem text="投票設定">
          <ListCheckbox
           label="匿名投票"
           checked={true}
           onChange={() => {}}
           name="checkedA"
         />
-    </ListItem>
+    </PanelItem>
   );
 }

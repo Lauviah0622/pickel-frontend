@@ -6,38 +6,47 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import EditIcon from "@material-ui/icons/Edit";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
-import ListItem from "../../../../layout/Sidebar/PanelItem.jsx";
-import useEventStateProps from '../../../../hooks/useEventStateProps';
+import ListItem from "../../../layout/Sidebar/PanelItem.jsx";
 
 const EventNameInput = styled(MuiInput)`
   .MuiInput-input {
     font-size: 2em;
     font-weight: 700;
+    cursor: unset;
   }
+  
 `;
 
-export default function EventName() {
-  const [eventNameState, setEventNameState] = useEventStateProps('name')
-  
+const EndAdornment = (
+  <InputAdornment position="end">
+    <EditIcon />
+  </InputAdornment>
+);
+
+/**
+ * if no  setEventName, not for editable
+ */
+export default function EventName({ eventName, setEventName }) {
+  const editable = typeof setEventName === 'function';
   const handleEventNameChange = (e) => {
-    setEventNameState(e.target.value)
+    setEventName(e.target.value);
   };
+
+
 
   return (
     <ListItem text="活動名稱">
       <EventNameInput
-        error={eventNameState.length === 0}
-        value={eventNameState}
+        error={eventName.length === 0}
+        value={eventName}
         fullWidth
         onChange={handleEventNameChange}
-        endAdornment={
-          <InputAdornment position="end">
-            <EditIcon />
-          </InputAdornment>
-        }
-      ></EventNameInput>
+        endAdornment={editable && EndAdornment}
+        disableUnderline={!editable}
+        spellCheck="false"
+      />
       <FormHelperText error>
-        {eventNameState.length === 0 && "活動名稱不得為空"}
+        {eventName.length === 0 && "活動名稱不得為空"}
       </FormHelperText>
     </ListItem>
   );

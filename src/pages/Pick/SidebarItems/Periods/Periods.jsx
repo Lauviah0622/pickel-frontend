@@ -3,7 +3,7 @@ import styled from "styled-components";
 import MuiIconButton from "@material-ui/core/IconButton";
 import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
 
-import Range from "../../../../components/List/Range.jsx";
+import Range from "../../../../components/list/Range.jsx";
 
 const IconButton = styled(MuiIconButton)`
   position: relative;
