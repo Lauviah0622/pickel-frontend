@@ -46,6 +46,7 @@ export const {
   setEventData,
   setEvent,
   addRange,
+  setEventState,
   deleteRangeByIndex,
   setValidation,
   setRangesValidation,

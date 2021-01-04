@@ -6,7 +6,7 @@ import MuiButton from "@material-ui/core/Button";
 import { useHistory } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { setEventProps } from '../../redux/features/event/eventSlice';
-import { setStatusData } from '../../redux/features/status/statusSlice';
+import { setStatus, cleanStatus } from '../../redux/features/status/statusSlice';
 
 
 const Root = styled.div`
@@ -69,7 +69,7 @@ export default function Entry() {
   };
 
   const handleButtonClick = () => {
-    dispatch(setStatusData('client'))
+    dispatch(setStatus('client'))
     dispatch(setEventProps({name: eventName}))
     history.push('/create');
   };
@@ -77,10 +77,8 @@ export default function Entry() {
   const statusState = useSelector((store) => store.statusState);
 
   useEffect(() => {
-    if (statusState === 'picker') {
-      history.push('/pick')
-    } else if (statusState === 'launcher') {
-      history.push('/event')
+    if (statusState) {
+      dispatch(cleanStatus())
     }
   }, []);
 

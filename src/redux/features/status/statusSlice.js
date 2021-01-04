@@ -6,12 +6,18 @@ const statusSlice = createSlice({
     status: null, // client, launcher, picker
   },
   reducers: {
-    setStatusData(state, { payload }) {
+    setStatus(state, { payload }) {
       // eslint-disable-next-line
       state.status = payload;
     },
   },
 });
 
+
+
 export default statusSlice.reducer;
-export const { setStatusData } = statusSlice.actions;
+export const { setStatus } = statusSlice.actions;
+
+export const cleanStatus = () => (disptach) => {
+  disptach(setStatus(null))
+}

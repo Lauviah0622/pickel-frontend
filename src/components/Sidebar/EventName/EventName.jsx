@@ -40,7 +40,7 @@ export default function EventName({ eventName, setEventName }) {
         error={eventName.length === 0}
         value={eventName}
         fullWidth
-        onChange={handleEventNameChange}
+        onChange={editable && handleEventNameChange}
         endAdornment={editable && EndAdornment}
         disableUnderline={!editable}
         spellCheck="false"

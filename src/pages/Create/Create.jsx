@@ -21,23 +21,25 @@ export default function Event() {
   const dispatch = useDispatch();
   const { status } = useSelector((store) => store.statusState);
   const { isRangesAllValid, event } = useSelector((store) => store.eventState);
-  // eslint-disable-next-line no-unused-vars
 
   // TODO: [phase2]allday 還有 part 要有不同的選擇器（之後再做）
-
   // TODO: **加上 prop-types**
 
+  // 離開視窗提醒
   const handleBeforeUnload = (e) => {
     const message = "o";
     (e || window.event).returnValue = message;
     return message;
   };
 
-  if (!status) {
-    history.push("/");
-  }
-
-  // 這裡不太確定能不能這樣用，但目前似乎沒問題
+  useEffect(() => {
+    if (status !== 'client') {
+      // 一定要有 entry 設定的 client 才可以近來
+      history.push('/')
+    }
+  }, [status, history])
+  
+// 設定離開的彈跳視窗，這邊還沒有深究
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {

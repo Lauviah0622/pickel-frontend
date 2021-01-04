@@ -31,7 +31,11 @@
 }
 }
 
-
 TODO: 1. 整理一下 component，把常用的抽出來，還有把 comppnent 改成有 editable 的參數，把 component 的一些限制拿出來，讓 pages 裡面控制，基本的放到 component 裡面
 TODO: 2. 在 event State 新增依照 event 狀態判斷能不能改，在想要另外設一個 state editable 還是？
 TODO: 3. 新增 saved 的 state
+
+TODO: ！！！！！！先做這個！！！！設定說每個進去調整使用者身份的 state
+
+TODO:
+一個完整個 CI/CD 流程

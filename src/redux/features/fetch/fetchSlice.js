@@ -1,7 +1,7 @@
 import { createSlice } from "@reduxjs/toolkit";
 import axios from "../../../axios";
-import { setEvent } from "../event/eventSlice";
-import { setStatusData } from "../status/statusSlice";
+import { setEvent, setEventState } from "../event/eventSlice";
+import { setStatus } from "../status/statusSlice";
 import { getEventState } from '../../../utils';
 
 const statusSlice = createSlice({
@@ -33,6 +33,7 @@ export const createEventReq = (eventData) => async (dispatch) => {
   try {
     const createEventRes = await axios.post("event", eventData);
     if (!createEventRes.data.ok) throw Error("event Res Error");
+    
     return Promise.resolve(createEventRes.data.data.event.eventSuffix);
   } catch (err) {
     if (!err.response) {
@@ -42,14 +43,25 @@ export const createEventReq = (eventData) => async (dispatch) => {
   }
 };
 
+export const updateEvent = () => async () => {
+
+}
+
 export const fetchEvent = (suffix) => async (dispatch) => {
   try {
     const getEventRes = await axios.get(`event/${suffix}`);
     if (!getEventRes.data.ok) throw Error("getEvent Res Error");
-    dispatch(setStatusData("launcher"));
+    dispatch(setStatus("launcher"));
     dispatch(setEvent(getEventRes.data.data.event));
-    console.log(getEventState(getEventRes.data.data.event));
+    // console.log(getEventState(getEventRes.data.data.event));
+    dispatch(setEventState(getEventState(getEventRes.data.data.event)))
+    
+    // console.log(getEventState(getEventRes.data.data.event));
+
+
+    return Promise.resolve(true)
   } catch (err) {
     console.log(err.message);
+    return Promise.reject(err)
   }
 };

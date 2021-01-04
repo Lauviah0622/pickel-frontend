@@ -50,9 +50,9 @@ export const checkIsRangeValid = (
 };
 
 export const getEventState = (event) => {
-  console.log(event.determineTime === true)
+  console.log('utils', event);
   switch (true) {
-    case !!event.determineTime:
+    case event.determineTime != null:
       return "determined";
     case dayjs().isAfter(dayjs(event.pickEnd)):
       return "postPicking";
@@ -62,8 +62,31 @@ export const getEventState = (event) => {
     case dayjs(event.pickStart).isAfter(dayjs()):
       return "prePicking";
     case event.pickSuffix == null && event.eventSuffix == null:
-      return "draft"
+      return "draft";
     default:
       return "invalid";
   }
+};
+
+export const getFormatedRange = (start, end) => {
+  const rangeStart = dayjs(start);
+  const rangeEnd = dayjs(end);
+  if (rangeStart.isSame(rangeEnd, "day")) {
+    return {
+      date: rangeStart.locale("zh-tw").format("dddd, MM 月 DD 日"),
+      time: [
+        rangeStart.locale("zh-tw").format("h:mm"),
+        rangeEnd.locale("zh-tw").format("h:mm"),
+      ],
+    };
+  }
+  const formatDateTime = (dayObj) => ({
+    date: dayObj.locale("zh-tw").format("dddd, MM 月 DD 日"),
+    time: dayObj.locale("zh-tw").format("h:mm"),
+  });
+
+  const formatedStart = formatDateTime(rangeStart);
+  const formatedEnd = formatDateTime(rangeEnd);
+
+  return [formatedStart, formatedEnd];
 };

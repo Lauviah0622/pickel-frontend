@@ -20,23 +20,27 @@ export default function Event() {
   const history = useHistory();
   const { suffix } = useParams();
   const dispatch = useDispatch();
-  const { status } = useSelector((store) => store.statusState);
   const { isRangesAllValid, event, eventState } = useSelector(
     (store) => store.eventState
   );
 
+  console.log(event);
   useEffect(() => {
-    dispatch(fetchEvent(suffix));
-  }, [suffix]);
+    dispatch(fetchEvent(suffix))
+      .catch(() => {
+        history.push('/')
+      });
+  }, [suffix, history]);
 
   // TODO: 這個視窗要在做好一點，目前先這樣
+  // 設定離開的彈跳視窗，這邊還沒有深究
+
   const handleBeforeUnload = (e) => {
     const message = "o";
     (e || window.event).returnValue = message;
     return message;
   };
 
-  // 這裡不太確定能不能這樣用，但目前似乎沒問題
   useEffect(() => {
     window.addEventListener("beforeunload", handleBeforeUnload);
     return () => {
@@ -46,7 +50,6 @@ export default function Event() {
 
   const handleCreateEvent = async () => {};
 
-  // FIXME:　改成用 array，然後是 {name, content} 的形式
   const Pannels = [
     {
       label: "活動資訊",
@@ -71,6 +74,16 @@ export default function Event() {
       ),
     },
   ];
+
+  const createUrlButton = ({
+    handleCreateEvent, errorMessage
+  }) => {
+    
+  }
+
+  const saveEventButton = () => {
+
+  }
 
   const errorMessage = (() => {
     if (event.ranges.length < 1) return "還沒填入預計舉辦時間";
