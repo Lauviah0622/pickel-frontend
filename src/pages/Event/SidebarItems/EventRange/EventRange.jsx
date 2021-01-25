@@ -16,7 +16,7 @@ export default function EventRanges() {
   return (
     <EventRange
       ranges={ranges}
-      deleteRange={handleDeleteRange}
+      deleteRangeHandlerCreator={handleDeleteRange}
       pickEnd={pickEnd}
       eventType={eventType}
       duration={duration}

@@ -49,8 +49,10 @@ export const checkIsRangeValid = (
   return conclusion ? !Object.values(res).includes(false) : res;
 };
 
+
+
 export const getEventState = (event) => {
-  console.log('utils', event);
+  console.log('utils: getEventState', event);
   switch (true) {
     case event.determineTime != null:
       return "determined";

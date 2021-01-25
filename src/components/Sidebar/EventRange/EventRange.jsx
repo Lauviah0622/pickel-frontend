@@ -7,6 +7,18 @@ import ClearRoundedIcon from "@material-ui/icons/ClearRounded";
 
 import { checkIsRangeValid } from "../../../utils";
 
+const IconButton = styled(MuiIconButton)`
+  position: relative;
+  top: -2px;
+  left: -5px;
+`;
+
+const EmptyMessage = styled.div`
+  text-align: center;
+  padding: 10px;
+  margin: auto;
+`;
+
 const RangeContainer = styled.div`
   width: 100%;
   /* border: 1px solid black; */
@@ -34,9 +46,44 @@ const RangeContainer = styled.div`
   }
 `;
 
-function DateTimeRange({ start, end, deleteOnClick, inValid }) {
+
+// 太大串抽出來
+function createRanges(
+  ranges,
+  eventType,
+  eventDuration,
+  eventPickEnd,
+  deleteRangeHandlerCreator
+) {
+  if (ranges.length === 0) {
+    return <EmptyMessage>還加沒加入任何範圍</EmptyMessage>;
+  }
+
+  return ranges.map((range, i) => {
+    const invalid = Object.values(
+      checkIsRangeValid(range, eventType, eventDuration, eventPickEnd)
+    ).includes(false);
+
+    const deleteRangeHandler =
+      typeof deleteRangeHandlerCreator === "function" ? () => deleteRangeHandlerCreator(i) : null;
+    
+    return (
+      <DateTimeRange
+        start={range.start}
+        end={range.end}
+        key={i}
+        deleteRangeHandler={deleteRangeHandler}
+        inValid={invalid}
+      />
+    );
+  });
+}
+
+// 一樣太大串抽出來
+function DateTimeRange({ start, end, deleteRangeHandler, inValid }) {
   const rangeStart = dayjs(start);
   const rangeEnd = dayjs(end);
+
   let range;
   if (rangeStart.isSame(rangeEnd, "day")) {
     range = (
@@ -70,63 +117,39 @@ function DateTimeRange({ start, end, deleteOnClick, inValid }) {
       </>
     );
   }
+
+  const deleteButton = typeof deleteRangeHandler === "function" ? (
+    <div className="range__adorment">
+      <IconButton size="small" onClick={deleteRangeHandler}>
+        <ClearRoundedIcon />
+      </IconButton>
+    </div>
+  ) : null;
+  
   return (
     <RangeContainer inValid={inValid}>
-      <div className="range__adorment">
-        <IconButton size="small" onClick={deleteOnClick}>
-          <ClearRoundedIcon />
-        </IconButton>
-      </div>
+      {deleteButton}
       <div className="range__date">{range}</div>
     </RangeContainer>
   );
 }
 
-const IconButton = styled(MuiIconButton)`
-  position: relative;
-  top: -2px;
-  left: -5px;
-`;
-
-const EmptyMessage = styled.div`
-  text-align: center;
-  padding: 10px;
-  margin: auto;
-`;
 
 export default function EventRanges({
-  ranges,
-  deleteRange,
-  pickEnd,
+  eventRanges,
   eventType,
-  duration,
+  eventDuration,
+  evnetPickEnd,
+  deleteRangeHandlerCreator
 }) {
-  // const { ranges, pickEnd, duration, eventType } = useSelector(
-  //   (store) => store.eventState.event
-  // );
-  const handleRangeDeleteOnclick = (i) => () => {
-    deleteRange(i)
-  };
+  const rangesContent = createRanges(
+    eventRanges,
+    eventType,
+    eventDuration,
+    evnetPickEnd,
+    deleteRangeHandlerCreator
+  );
 
-  let rangesContent;
-  if (ranges.length === 0) {
-    rangesContent = <EmptyMessage>還加沒加入任何範圍</EmptyMessage>;
-  } else {
-    rangesContent = ranges.map((range, i) => {
-      const invalid = Object.values(
-        checkIsRangeValid(range, eventType, duration, pickEnd)
-      ).includes(false);
-      return (
-        <DateTimeRange
-          start={range.start}
-          end={range.end}
-          key={i}
-          deleteOnClick={handleRangeDeleteOnclick(i)}
-          inValid={invalid}
-        />
-      );
-    });
-  }
 
   return <>{rangesContent}</>;
 }

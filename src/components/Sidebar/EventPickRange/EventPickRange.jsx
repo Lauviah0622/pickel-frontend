@@ -81,6 +81,8 @@ const UneditableContent = (eventPickStart, eventPickEnd) => {
   );
 };
 
+
+
 export default function EventpickRange({
   eventType,
   eventDuration,
@@ -89,12 +91,14 @@ export default function EventpickRange({
   setEventPickStart,
   setEventPickEnd,
 }) {
+  // 如果沒有 setter，呈現 uneditable
   if (
     typeof setEventPickStart !== "function" ||
     typeof setEventPickEnd !== "function"
   ) {
     return UneditableContent(eventPickStart, eventPickEnd);
   }
+
   const handleEventPickStartChange = (dateTime) => {
     const unit = eventType === "part" ? "minute" : "day";
     const addValue = eventType === "part" ? 15 : 1;
@@ -124,7 +128,7 @@ export default function EventpickRange({
           // FIXME:呈現時間可以，如果要更改就不行？這裡要想一下業務邏輯尚要怎麼處理
           format="yyyy/MM/dd HH:mm"
         />
-        <ItemText>至12312312</ItemText>
+        <ItemText>至</ItemText>
         <MuiKeyboardDateTimePicker
           minDate={eventPickStart}
           ampm={false}

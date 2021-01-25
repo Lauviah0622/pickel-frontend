@@ -13,6 +13,10 @@ const ItemContentBlock = styled.div`
   }
 `;
 
+const UneditableContent = styled.div`
+  padding-left: 5px;
+`;
+
 const Multiline = styled(TextField)`
   width: 100%;
 `;
@@ -26,9 +30,11 @@ export default function EventInfo({
   const eventLauncherEditable = typeof setEventLauncher === "function";
   const eventDescriptinoEditable = typeof setEventDescription === "function";
 
-  const handleEventLauncherChange = eventLauncherEditable ? (e) => {
-    setEventLauncher(e.target.value);
-  } : null;
+  const handleEventLauncherChange = eventLauncherEditable
+    ? (e) => {
+        setEventLauncher(e.target.value);
+      }
+    : null;
 
   const handleEventDescriptionChange = eventDescriptinoEditable
     ? (e) => {
@@ -36,31 +42,39 @@ export default function EventInfo({
       }
     : null;
 
+  const launcherField = eventLauncherEditable ? (
+    <TextField
+      label="活動主辦人"
+      variant="outlined"
+      size="small"
+      value={eventLauncher}
+      onChange={handleEventLauncherChange}
+    />
+  ) : (
+    <UneditableContent>主辦人：{eventLauncher}</UneditableContent>
+  );
+
+  const descriptionField = eventDescriptinoEditable ? (
+    <Multiline
+      label="活動附註"
+      multiline
+      rows={5}
+      value={eventDescription}
+      size="small"
+      variant="outlined"
+      onChange={handleEventDescriptionChange}
+    />
+  ) : (
+    <UneditableContent>{eventDescription}</UneditableContent>
+  );
+
   return (
     <PanelItem text="活動資訊">
-      <ItemContentBlock>
-        <TextField
-          label="活動主辦人"
-          variant="outlined"
-          size="small"
-          value={eventLauncher}
-          onChange={handleEventLauncherChange}
-        />
-      </ItemContentBlock>
+      <ItemContentBlock>{launcherField}</ItemContentBlock>
       <FormHelperText error>
         {eventLauncher.length < 1 && "活動主辦人沒寫呦"}
       </FormHelperText>
-      <ItemContentBlock>
-        <Multiline
-          label="活動附註"
-          multiline
-          rows={5}
-          value={eventDescription}
-          size="small"
-          variant="outlined"
-          onChange={handleEventDescriptionChange}
-        />
-      </ItemContentBlock>
+      <ItemContentBlock>{descriptionField}</ItemContentBlock>
     </PanelItem>
   );
 }

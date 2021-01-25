@@ -58,6 +58,10 @@ const fixedDuration = (eventDuration, eventType) => {
   </ListItem>)
 }
 
+/**
+ * 如果沒有 setEventDuration 還有 serEventType 就是不可修改
+ *  
+ */
 export default function EventDuration({
   eventType,
   eventDuration,

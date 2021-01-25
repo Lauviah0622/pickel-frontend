@@ -64,34 +64,34 @@ const createDefaultRange = (eventType, duration, defaultRangeStart) => {
 
 export default function AddRange({
   eventType,
-  duration,
-  pickEnd,
-  ranges,
-  handleAddRange
+  eventDuration,
+  eventPickEnd,
+  eventRanges,
+  addRange
 }) {
 
   const defaultRange = createDefaultRange(
     eventType,
-    duration,
-    dayjs(pickEnd).add(1, "d")
+    eventDuration,
+    dayjs(eventPickEnd).add(1, "d")
   );
 
   const [start, setStart] = useState(defaultRange[0]);
   const [end, setEnd] = useState(defaultRange[1]);
 
-  const isRangeValid = checkIsRangeValid({ start, end }, eventType, duration, pickEnd, ranges);
+  const isRangeValid = checkIsRangeValid({ start, end }, eventType, eventDuration, eventPickEnd, eventRanges);
 
-  const handleAddClick = () => {
+  const addRangeHandler = () => {
     if (Object.values(isRangeValid).includes(false))
       return;
-    handleAddRange(start, end)
+    addRange(start, end)
   };
 
   // defualtRange 只是運算出來的結果，所以這裡 dependency 不加 defualtRange，不知道對不對？
   useEffect(() => {
     setStart(defaultRange[0]);
     setEnd(defaultRange[1]);
-  }, [eventType, duration, pickEnd]);
+  }, [eventType, eventDuration, eventPickEnd]);
 
   const handleStartOnchange = (dateTimeValue) => {
     const unit = eventType === "part" ? "minute" : "day";
@@ -99,7 +99,7 @@ export default function AddRange({
     setStart(dayjs(dateTimeValue).toISOString());
     setEnd(
       dayjs(dateTimeValue)
-        .add(addValue * duration, unit)
+        .add(addValue * eventDuration, unit)
         .toISOString()
     );
   };
@@ -107,7 +107,7 @@ export default function AddRange({
   return (
     <AddPeriodContainer>
       <div className="range__adorment">
-        <IconButton size="small" onClick={handleAddClick}>
+        <IconButton size="small" onClick={addRangeHandler}>
           <AddRoundedIcon />
         </IconButton>
       </div>

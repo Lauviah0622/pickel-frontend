@@ -26,6 +26,7 @@ export default function SetEventpickRange() {
       eventPickEnd={eventPickEndState}
       setEventPickStart={setEventPickStartState}
       setEventPickEnd={setEventPickEndState}
+      
     />
   );
 }

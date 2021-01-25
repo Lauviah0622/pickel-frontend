@@ -11,6 +11,7 @@ export default function SettingEventDuration() {
   const [eventTypeState, setEventTypeState] = useEventStateProps("eventType");
 
 
+  
   return (
     <EventDuration
       eventDuration={eventDurationState}
@@ -19,4 +20,5 @@ export default function SettingEventDuration() {
       setEventType={setEventTypeState}
     />
   );
+  
 }
