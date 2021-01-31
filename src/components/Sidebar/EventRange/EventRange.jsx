@@ -49,21 +49,18 @@ const RangeContainer = styled.div`
 
 // 太大串抽出來
 function createRanges(
-  ranges,
+  eventRanges,
   eventType,
   eventDuration,
   eventPickEnd,
   deleteRangeHandlerCreator
 ) {
-  if (ranges.length === 0) {
+  if (eventRanges.length === 0) {
     return <EmptyMessage>還加沒加入任何範圍</EmptyMessage>;
   }
 
-  return ranges.map((range, i) => {
-    const invalid = Object.values(
-      checkIsRangeValid(range, eventType, eventDuration, eventPickEnd)
-    ).includes(false);
-
+  return eventRanges.map((range, i, ranges) => {
+    const isRangeValid = checkIsRangeValid(range, eventType, eventDuration, eventPickEnd, ranges, true, true)
     const deleteRangeHandler =
       typeof deleteRangeHandlerCreator === "function" ? () => deleteRangeHandlerCreator(i) : null;
     
@@ -73,7 +70,7 @@ function createRanges(
         end={range.end}
         key={i}
         deleteRangeHandler={deleteRangeHandler}
-        inValid={invalid}
+        inValid={!isRangeValid}
       />
     );
   });
@@ -84,6 +81,8 @@ function DateTimeRange({ start, end, deleteRangeHandler, inValid }) {
   const rangeStart = dayjs(start);
   const rangeEnd = dayjs(end);
 
+  (rangeStart.format('DD/MM/YYYY HH:mm'));
+
   let range;
   if (rangeStart.isSame(rangeEnd, "day")) {
     range = (
@@ -91,8 +90,8 @@ function DateTimeRange({ start, end, deleteRangeHandler, inValid }) {
         <div className="datetime__container">
           <div>{rangeStart.locale("zh-tw").format("dddd, MM 月 DD 日")}</div>
           <div className="datetime__time">
-            {rangeStart.locale("zh-tw").format("h:mm")}～
-            {rangeEnd.locale("zh-tw").format("h:mm")}
+            {rangeStart.locale("zh-tw").format("H:mm")}～
+            {rangeEnd.locale("zh-tw").format("H:mm")}
           </div>
         </div>
       </div>
@@ -100,7 +99,7 @@ function DateTimeRange({ start, end, deleteRangeHandler, inValid }) {
   } else {
     const formatDateTime = (dayObj) => [
       dayObj.locale("zh-tw").format("dddd, MM 月 DD 日"),
-      dayObj.locale("zh-tw").format("h:mm"),
+      dayObj.locale("zh-tw").format("H:mm"),
     ];
     const formatedStart = formatDateTime(rangeStart);
     const formatedEnd = formatDateTime(rangeEnd);
@@ -139,14 +138,14 @@ export default function EventRanges({
   eventRanges,
   eventType,
   eventDuration,
-  evnetPickEnd,
+  eventPickEnd,
   deleteRangeHandlerCreator
 }) {
   const rangesContent = createRanges(
     eventRanges,
     eventType,
     eventDuration,
-    evnetPickEnd,
+    eventPickEnd,
     deleteRangeHandlerCreator
   );
 

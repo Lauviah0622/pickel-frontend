@@ -21,6 +21,10 @@ const Multiline = styled(TextField)`
   width: 100%;
 `;
 
+const EventInfoWrapper = styled.div`
+  padding-bottom: 5px;
+`;
+
 export default function EventInfo({
   eventLauncher,
   eventDescription,
@@ -70,11 +74,13 @@ export default function EventInfo({
 
   return (
     <PanelItem text="活動資訊">
-      <ItemContentBlock>{launcherField}</ItemContentBlock>
-      <FormHelperText error>
-        {eventLauncher.length < 1 && "活動主辦人沒寫呦"}
-      </FormHelperText>
-      <ItemContentBlock>{descriptionField}</ItemContentBlock>
+      <EventInfoWrapper>
+        <ItemContentBlock>{launcherField}</ItemContentBlock>
+        <FormHelperText error>
+          {eventLauncher.length < 1 && "活動主辦人沒寫呦"}
+        </FormHelperText>
+        <ItemContentBlock>{descriptionField}</ItemContentBlock>
+      </EventInfoWrapper>
     </PanelItem>
   );
 }

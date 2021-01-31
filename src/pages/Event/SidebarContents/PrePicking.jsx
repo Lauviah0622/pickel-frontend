@@ -20,13 +20,13 @@ import {
   addNoRepeatRange,
 } from "../../../redux/features/event/eventSlice";
 
-export default function Determined() {
+export default function Prepicking() {
   const [eventDurationState, setEventDurationState] = useEventStateProps("duration");
   const [eventNameState, setEventNameState] = useEventStateProps("name");
   const [eventPickStartState, setEventPickStartState] = useEventStateProps("pickStart");
   const [eventPickEndState, setEventPickEndState] = useEventStateProps("pickEnd");
-  const [eventLauncherState] = useEventStateProps("launcher");
-  const [eventDescriptionState] = useEventStateProps("description");
+  const [eventLauncherState, setEventLauncherState] = useEventStateProps("launcher");
+  const [eventDescriptionState, setEventDescriptionState] = useEventStateProps("description");
   const [eventTypeState, setEventTypeState] = useEventStateProps("eventType");
   const [eventRanges] = useEventStateProps("ranges");
 
@@ -77,6 +77,8 @@ export default function Determined() {
               <EventInfo
                 eventLauncher={eventLauncherState}
                 eventDescription={eventDescriptionState}
+                setEventDescription={setEventDescriptionState}
+                setEventLauncher={setEventLauncherState}
               />
             </>
           ),

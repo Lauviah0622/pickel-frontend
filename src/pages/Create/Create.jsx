@@ -22,9 +22,6 @@ export default function Event() {
   const { status } = useSelector((store) => store.statusState);
   const { isRangesAllValid, event } = useSelector((store) => store.eventState);
 
-  // TODO: [phase2]allday 還有 part 要有不同的選擇器（之後再做）
-  // TODO: **加上 prop-types**
-
   // 離開視窗提醒
   const handleBeforeUnload = (e) => {
     const message = "o";
@@ -103,6 +100,7 @@ export default function Event() {
         errorMessage={errorMessage}
       >
         {Pannels}
+        
       </Sidebar>
     </EventContainer>
   );

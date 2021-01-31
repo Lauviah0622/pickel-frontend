@@ -12,23 +12,13 @@ import EventRange from "../../../components/Sidebar/EventRange";
 
 import useEventStateProps from "../../../hooks/useEventStateProps";
 
-export default function Postpicking() {
-  const [eventDurationState, setEventDurationState] = useEventStateProps(
-    "duration"
-  );
-  const [eventNameState, setEventNameState] = useEventStateProps("name");
-  const [eventPickStartState] = useEventStateProps(
-    "pickStart"
-  );
-  const [eventPickEndState] = useEventStateProps(
-    "pickEnd"
-  );
-  const [eventLauncherState, setEventLauncherState] = useEventStateProps(
-    "launcher"
-  );
-  const [eventDescriptionState, setEventDescriptionState] = useEventStateProps(
-    "description"
-  );
+export default function Picking() {
+  const [eventDurationState] = useEventStateProps("duration");
+  const [eventNameState] = useEventStateProps("name");
+  const [eventPickStartState] = useEventStateProps("pickStart");
+  const [eventPickEndState] = useEventStateProps("pickEnd");
+  const [eventLauncherState] = useEventStateProps("launcher");
+  const [eventDescriptionState] = useEventStateProps("description");
   const [eventTypeState] = useEventStateProps("eventType");
   const [eventRanges] = useEventStateProps("ranges");
 
@@ -36,12 +26,15 @@ export default function Postpicking() {
     <Sidebar
       SidebarBottomItems={
         <>
+          <ListBottomButton variant="contained" alertTheme>
+            暫停投票
+          </ListBottomButton>
           <ListBottomButton
             variant="contained"
             color="primary"
             mainTheme={true}
           >
-            確定活動資訊
+            結束投票
           </ListBottomButton>
         </>
       }
@@ -51,14 +44,10 @@ export default function Postpicking() {
           label: "活動資訊",
           content: (
             <>
-              <EventName
-                eventName={eventNameState}
-                setEventName={setEventNameState}
-              />
+              <EventName eventName={eventNameState} />
               <EventDuration
                 eventDuration={eventDurationState}
                 eventType={eventTypeState}
-                setEventDuration={setEventDurationState}
               />
               <EventPickRange
                 eventType={eventTypeState}
@@ -69,8 +58,6 @@ export default function Postpicking() {
               <EventInfo
                 eventLauncher={eventLauncherState}
                 eventDescription={eventDescriptionState}
-                setEventDescription={setEventDescriptionState}
-                setEventLauncher={setEventLauncherState}
               />
               <PanelItem text="預計舉辦時間">
                 <EventRange

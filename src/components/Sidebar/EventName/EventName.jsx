@@ -6,7 +6,7 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import EditIcon from "@material-ui/icons/Edit";
 import InputAdornment from "@material-ui/core/InputAdornment";
 
-import ListItem from "../../../layout/Sidebar/PanelItem.jsx";
+import PanelItem from "../../../layout/Sidebar/PanelItem.jsx";
 
 const EventNameInput = styled(MuiInput)`
   .MuiInput-input {
@@ -28,19 +28,19 @@ const EndAdornment = (
  */
 export default function EventName({ eventName, setEventName }) {
   const editable = typeof setEventName === 'function';
-  const handleEventNameChange = (e) => {
+  const handleEventNameChange = editable ? (e) => {
     setEventName(e.target.value);
-  };
+  } : null
 
 
 
   return (
-    <ListItem text="活動名稱">
+    <PanelItem text="活動名稱">
       <EventNameInput
         error={eventName.length === 0}
         value={eventName}
         fullWidth
-        onChange={editable && handleEventNameChange}
+        onChange={handleEventNameChange}
         endAdornment={editable && EndAdornment}
         disableUnderline={!editable}
         spellCheck="false"
@@ -48,6 +48,6 @@ export default function EventName({ eventName, setEventName }) {
       <FormHelperText error>
         {eventName.length === 0 && "活動名稱不得為空"}
       </FormHelperText>
-    </ListItem>
+    </PanelItem>
   );
 }

@@ -20,16 +20,45 @@ export const isValidDuration = (start, end, type, minDuration = 1) => {
     : dayjs(durationEnd).diff(durationStart, "day") >= minDuration;
 };
 
-const checkIsRangeNoRepeat = (ranges, addRangeStart, addRangeEnd) => {
+/**
+ * 
+ * @param {*} ranges 
+ * @param {*} addRangeStart 
+ * @param {*} addRangeEnd 
+ * @param {*} innerCheck 內部檢查，ranges 裡面包含被檢查的時間
+ */
+const checkIsRangeNoRepeat = (ranges, addRangeStart, addRangeEnd, innerCheck = false) => {
   if (ranges.length < 1) return true;
-  return !ranges
+  const SAME_RANGE = 'same';
+  const result = ranges
     .map((range) => {
+      if (dayjs(range.start).isSame(dayjs(addRangeStart)) && dayjs(range.end).isSame(dayjs(addRangeEnd))) {
+        return SAME_RANGE
+      }
       const startIsValid = dayjs(addRangeStart).isSameOrAfter(range.end);
       const endIsValid = dayjs(addRangeEnd).isSameOrBefore(range.start);
       return startIsValid || endIsValid;
-    })
-    .includes(false);
+    });
+  
+  if (innerCheck) {
+    const i = result.indexOf(SAME_RANGE)
+    const hasOneSameRange = i === result.lastIndexOf(SAME_RANGE) && i >= 0;
+    return !result.includes(false) && hasOneSameRange
+  }
+  return !result.includes(false)
+  
 };
+
+/**
+ * 
+ * @param {Object{rangeStart, rangeEnd}}
+ * @param {*} eventType 
+ * @param {*} duration 
+ * @param {*} pickEnd 
+ * @param {Range} ranges 
+ * @param {boolean} innerCheck 給 checkIsRangeNoRepeat 的參數
+ * @param {boolean} conclusion 表示說，要這個時段的總結果，還是這個時段有哪些問題
+ */
 
 export const checkIsRangeValid = (
   { start, end },
@@ -37,14 +66,17 @@ export const checkIsRangeValid = (
   duration,
   pickEnd,
   ranges,
+  innerCheck,
   conclusion
 ) => {
   const res = {};
+  
   res.isEndLateThenStart = dayjs(end).isAfter(start);
   res.isLongerThenDuration = isValidDuration(start, end, eventType, duration);
   res.isLaterThanPickEnd = dayjs(start).isAfter(dayjs(pickEnd));
-  if (ranges != null) {
-    res.isNoRepeat = checkIsRangeNoRepeat(ranges, start, end);
+  if (ranges) {
+    const isNoRepeat = checkIsRangeNoRepeat(ranges, start, end, innerCheck);
+    res.isNoRepeat = isNoRepeat
   }
   return conclusion ? !Object.values(res).includes(false) : res;
 };
@@ -52,7 +84,6 @@ export const checkIsRangeValid = (
 
 
 export const getEventState = (event) => {
-  console.log('utils: getEventState', event);
   switch (true) {
     case event.determineTime != null:
       return "determined";

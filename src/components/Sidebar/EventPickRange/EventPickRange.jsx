@@ -125,7 +125,6 @@ export default function EventpickRange({
           value={eventPickStart}
           onChange={handleEventPickStartChange}
           disablePast
-          // FIXME:呈現時間可以，如果要更改就不行？這裡要想一下業務邏輯尚要怎麼處理
           format="yyyy/MM/dd HH:mm"
         />
         <ItemText>至</ItemText>

@@ -53,11 +53,7 @@ export const fetchEvent = (suffix) => async (dispatch) => {
     if (!getEventRes.data.ok) throw Error("getEvent Res Error");
     dispatch(setStatus("launcher"));
     dispatch(setEvent(getEventRes.data.data.event));
-    // console.log(getEventState(getEventRes.data.data.event));
     dispatch(setEventState(getEventState(getEventRes.data.data.event)))
-    
-    // console.log(getEventState(getEventRes.data.data.event));
-
 
     return Promise.resolve(true)
   } catch (err) {
