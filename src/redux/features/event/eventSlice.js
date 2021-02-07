@@ -15,7 +15,7 @@ const eventSlice = createSlice({
   name: "eventState",
   initialState: {
     event: { ...initialEventState },
-    isRangesAllValid: true,
+    errors: {},
     eventState: "draft",
     updated: false,
   },

@@ -31,16 +31,24 @@
 }
 }
 
-DONE: 把 component 的一些限制拿出來，讓 pages 裡面控制，基本的放到 component 裡面。
+TODO(DONE): 把 component 的一些限制拿出來，讓 pages 裡面控制，基本的放到 component 裡面。
 
 目前正在重構 event 還有下面的 component，不同的 event state 對應到不同的 component。
 
-TODO: （CURRENT 5%）因為在改 event 的時候有改 component 的 props 名稱，所以 create 那邊也要改
+TODO(DONE): （CURRENT 5%）因為在改 event 的時候有改 component 的 props 名稱，所以 create 那邊也要改
+
+BUG(DONE): 新增預計舉辦範圍要有阻擋機制，如果不符合就不能新增，還有要處理 error message 的問題
+
+TODO(DONE): CREATE 串上 建立 event 的 API
+
+BUG(DONE): CREATE 如果沒有預計舉辦時間範圍，不給建立
+
+TODO: - 建立成功後， 1. 給予 MODAL 告訴網址 2. 跳轉到 活動設定頁面 - 建立失敗的話 1. 錯誤頁面
 
 TODO: 存檔 & 送出 event
 
-1. 新增內容檢查，並且把檢查的結果放在 state 裡面
-1. 新增 存檔的 redux state，暗存檔才可以進行下一個動作，存檔會把資料傳到後端去，應該可以串後端的 update API
+1. 新增內容檢查，並且把檢查的結果放在 state 裡面(這個有點不知道要坐在哪裡)
+2. 新增 存檔的 redux state，暗存檔才可以進行下一個動作，存檔會把資料傳到後端去，應該可以串後端的 update API
 
 TODO: 記得 huli 提過得時間問題，後端時間的儲存方式還有前端儲存在 state 裡面的東西應該要統一成一個格式（我記得是 UTC 然後帶時區）
 

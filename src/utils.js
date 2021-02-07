@@ -30,7 +30,7 @@ export const isValidDuration = (start, end, type, minDuration = 1) => {
 const checkIsRangeNoRepeat = (ranges, addRangeStart, addRangeEnd, innerCheck = false) => {
   if (ranges.length < 1) return true;
   const SAME_RANGE = 'same';
-  const result = ranges
+  const results = ranges
     .map((range) => {
       if (dayjs(range.start).isSame(dayjs(addRangeStart)) && dayjs(range.end).isSame(dayjs(addRangeEnd))) {
         return SAME_RANGE
@@ -39,13 +39,14 @@ const checkIsRangeNoRepeat = (ranges, addRangeStart, addRangeEnd, innerCheck = f
       const endIsValid = dayjs(addRangeEnd).isSameOrBefore(range.start);
       return startIsValid || endIsValid;
     });
-  
+  console.log(results);
   if (innerCheck) {
-    const i = result.indexOf(SAME_RANGE)
-    const hasOneSameRange = i === result.lastIndexOf(SAME_RANGE) && i >= 0;
-    return !result.includes(false) && hasOneSameRange
+    const i = results.indexOf(SAME_RANGE);
+    const hasOneSameRange = i === results.lastIndexOf(SAME_RANGE) && i >= 0;
+    console.log('check', i, hasOneSameRange);
+    return !results.includes(false) && hasOneSameRange
   }
-  return !result.includes(false)
+  return  !results.some((e) => !e || e === SAME_RANGE)
   
 };
 
@@ -57,7 +58,7 @@ const checkIsRangeNoRepeat = (ranges, addRangeStart, addRangeEnd, innerCheck = f
  * @param {*} pickEnd 
  * @param {Range} ranges 
  * @param {boolean} innerCheck 給 checkIsRangeNoRepeat 的參數
- * @param {boolean} conclusion 表示說，要這個時段的總結果，還是這個時段有哪些問題
+ * @param {boolean} conclusion  false: 要這個時段的總結果 true: 這個時段有哪些問題 
  */
 
 export const checkIsRangeValid = (
@@ -75,13 +76,13 @@ export const checkIsRangeValid = (
   res.isLongerThenDuration = isValidDuration(start, end, eventType, duration);
   res.isLaterThanPickEnd = dayjs(start).isAfter(dayjs(pickEnd));
   if (ranges) {
+    console.log('start, end: ', start, end);
     const isNoRepeat = checkIsRangeNoRepeat(ranges, start, end, innerCheck);
+    console.log('isNoRepeat', isNoRepeat);
     res.isNoRepeat = isNoRepeat
   }
   return conclusion ? !Object.values(res).includes(false) : res;
 };
-
-
 
 export const getEventState = (event) => {
   switch (true) {
@@ -123,3 +124,25 @@ export const getFormatedRange = (start, end) => {
 
   return [formatedStart, formatedEnd];
 };
+
+/*eslint-disable */
+export function getEventValidationResult (eventState) {
+  const res = {
+    isNameValid: true
+  };
+
+  switch (true) {
+    case eventState.name.length < 1:
+      res.noName = false;
+    
+    case eventState.ranges.length < 1:
+      res.noRanges = false;
+    
+    default:
+  }
+
+  return ({
+    res,
+    ok: !Object.values(res).includes(false)
+  })
+}

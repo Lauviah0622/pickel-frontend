@@ -82,8 +82,7 @@ export default function AddRange({
   const isRangeValid = checkIsRangeValid({ start, end }, eventType, eventDuration, eventPickEnd, eventRanges);
 
   const addRangeHandler = () => {
-    if (Object.values(isRangeValid).includes(false))
-      return;
+    if (Object.values(isRangeValid).includes(false)) return;
     addRange(start, end)
   };
 

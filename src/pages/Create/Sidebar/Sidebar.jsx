@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 
 import Sidebar from "../../../layout/Sidebar/Sidebar.jsx";
 import ListBottomButton from "../../../layout/Sidebar/SidebarFooterBtn.jsx";
@@ -15,10 +15,32 @@ import EventAddRange from "../../../components/Sidebar/EventAddRange";
 
 import useEventStateProps from "../../../hooks/useEventStateProps";
 
+import {createEventReq} from '../../../redux/features/fetch/fetchSlice';
+
 import {
   deleteRange,
   addNoRepeatRange,
 } from "../../../redux/features/event/eventSlice";
+
+import { getEventValidationResult } from '../../../utils';
+
+
+/* eslint-disable */
+function getErrorMessages (eventValidationResult) {
+  const errorMessages = [];
+  switch (false) {
+    case eventValidationResult.noName:
+      errorMessages.push('未輸入活動名稱');
+    
+    case eventValidationResult.noRanges:
+      errorMessages.push('未加入預計舉辦時間');
+    
+    default:
+      return errorMessages
+  }
+}
+
+/* eslint-enable */
 
 export default function Create() {
   const [eventDurationState, setEventDurationState] = useEventStateProps("duration");
@@ -29,6 +51,10 @@ export default function Create() {
   const [eventDescriptionState, setEventDescriptionState] = useEventStateProps("description");
   const [eventTypeState, setEventTypeState] = useEventStateProps("eventType");
   const [eventRanges] = useEventStateProps("ranges");
+  const eventState = useSelector((state) => state.eventState.event);
+
+  const eventValidation = getEventValidationResult(eventState);
+  const errorMessage = getErrorMessages(eventValidation.res).join(`, `);
 
   const dispatch = useDispatch();
   const deleteRangeHandlerCreator = (i) => {
@@ -38,15 +64,25 @@ export default function Create() {
     dispatch(addNoRepeatRange({ start, end }));
   };
 
+  const createEventHandler = async () => {
+    const res = await dispatch(createEventReq());
+    console.log(res);
+  }
+
+  
 
   return (
     <Sidebar
+      errorMessage={errorMessage}
       SidebarBottomItems={
         <>
+          
           <ListBottomButton
             variant="contained"
             color="primary"
             mainTheme={true}
+            onClick={createEventHandler}
+            disabled={!eventValidation.ok}
           >
             建立活動資訊頁
           </ListBottomButton>

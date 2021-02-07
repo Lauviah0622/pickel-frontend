@@ -46,7 +46,7 @@ export default function Event() {
     };
   }, []);
 
-  const sidebarContent = (eventState) => {
+  const CreateSidebar = (eventState) => {
     switch (eventState) {
       case 'determined':
         return <Determined/>
@@ -71,7 +71,7 @@ export default function Event() {
 
   return (
     <EventContainer>
-      {sidebarContent(eventState)}
+      {CreateSidebar(eventState)}
     </EventContainer>
   );
 }

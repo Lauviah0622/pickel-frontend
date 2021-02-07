@@ -29,13 +29,15 @@ export const { setError } = statusSlice.actions;
 
 // TODO: 記得加上 isLoading 的繞圈圈 UI
 // eslint-disable-next-line no-unused-vars
-export const createEventReq = (eventData) => async (dispatch) => {
+export const createEventReq = (eventData) => async (dispatch, getState) => {
   try {
-    const createEventRes = await axios.post("event", eventData);
+    const {event} = getState().eventState;
+    const createEventRes = await axios.post("event", event);
     if (!createEventRes.data.ok) throw Error("event Res Error");
     
-    return Promise.resolve(createEventRes.data.data.event.eventSuffix);
+    return Promise.resolve(createEventRes.data.data.event);
   } catch (err) {
+    console.log(err.response);
     if (!err.response) {
       dispatch(setError(err.message));
     }

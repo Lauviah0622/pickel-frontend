@@ -1,26 +1,16 @@
 import React, { useEffect } from "react";
 import styled from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router-dom";
 
-import Sidebar from "../../layout/Sidebar/Sidebar.jsx";
-import ListBottomButton from "../../layout/Sidebar/SidebarFooterBtn.jsx";
-import EventName from "./SidebarItems/EventName";
-import EventDuration from "./SidebarItems/EventDuration";
-import EventPickRange from "./SidebarItems/EventPickRange";
-import EventInfo from "./SidebarItems/EventInfo";
-import EventRange from "./SidebarItems/EventRange";
-import EventAddRange from "./SidebarItems/EventAddRange";
-import ListItem from "../../layout/Sidebar/PanelItem.jsx";
-import { createEventReq } from "../../redux/features/fetch/fetchSlice";
+import Sidebar from './Sidebar';
+
 
 const EventContainer = styled.div``;
 
 export default function Event() {
   const history = useHistory();
-  const dispatch = useDispatch();
   const { status } = useSelector((store) => store.statusState);
-  const { isRangesAllValid, event } = useSelector((store) => store.eventState);
 
   // 離開視窗提醒
   const handleBeforeUnload = (e) => {
@@ -44,64 +34,10 @@ export default function Event() {
     };
   }, []);
 
-  const handleCreateEvent = async () => {
-    if (status !== "client" || isRangesAllValid !== true) return;
-    const eventSuffix = await dispatch(createEventReq(event));
-    history.push(`event/${eventSuffix}`);
-  };
-
-  const Pannels = [
-    {
-      label: "活動資訊",
-      content: (
-        <>
-          <EventName />
-          <EventDuration />
-          <EventPickRange />
-          <EventInfo />
-        </>
-      ),
-    },
-    {
-      label: "預計舉辦時間範圍",
-      content: (
-        <>
-          <ListItem text="預計舉辦時間">
-            <EventRange />
-            <EventAddRange />
-          </ListItem>
-        </>
-      ),
-    },
-  ];
-
-  const errorMessage = (() => {
-    if (event.ranges.length < 1) return "還沒填入預計舉辦時間";
-    if (!isRangesAllValid) return "預計舉辦時間錯誤";
-    return null;
-  })();
-
   return (
     <EventContainer>
-      <Sidebar
-        SidebarBottomItems={
-          <>
-            <ListBottomButton
-              variant="contained"
-              color="primary"
-              mainTheme={true}
-              onClick={handleCreateEvent}
-              disabled={!!errorMessage}
-            >
-              建立活動
-            </ListBottomButton>
-          </>
-        }
-        errorMessage={errorMessage}
-      >
-        {Pannels}
-        
-      </Sidebar>
+      
+      <Sidebar/>
     </EventContainer>
   );
 }
