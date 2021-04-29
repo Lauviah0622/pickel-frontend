@@ -42,7 +42,7 @@ function getErrorMessages (eventValidationResult) {
 
 /* eslint-enable */
 
-export default function Create() {
+export default function CreateSidebar({handleModalOpen}) {
   const [eventDurationState, setEventDurationState] = useEventStateProps("duration");
   const [eventNameState, setEventNameState] = useEventStateProps("name");
   const [eventPickStartState, setEventPickStartState] = useEventStateProps("pickStart");
